@@ -24,21 +24,21 @@ import { LegislationCard } from './LegislationCard';
 export function BillsTable({
   legislation,
   offset,
-  totalProducts
+  totalBills
 }: {
   legislation: LegislationInfo[];
   offset: number;
-  totalProducts: number;
+  totalBills: number;
 }) {
   let router = useRouter();
-  let productsPerPage = 5;
+  let billsPerPage = 20;
 
   function prevPage() {
     router.back();
   }
 
   function nextPage() {
-    router.push(`/?offset=${offset}`, { scroll: false });
+    router.push(`/?offset=${offset + billsPerPage}`, { scroll: false });
   }
 
 
@@ -78,9 +78,9 @@ export function BillsTable({
           <div className="text-xs text-muted-foreground">
             Showing{' '}
             <strong>
-              {Math.max(0, Math.min(offset - productsPerPage, totalProducts) + 1)}-{offset}
+              {Math.max(0, Math.min(offset, totalBills) + 1)}-{Math.min(offset + billsPerPage, totalBills)}
             </strong>{' '}
-            of <strong>{totalProducts}</strong> products
+            of <strong>{totalBills}</strong> bills
           </div>
           <div className="flex">
             <Button
@@ -88,7 +88,7 @@ export function BillsTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset === productsPerPage}
+              disabled={offset === 0}
             >
               <ChevronLeft className="mr-2 h-4 w-4" />
               Prev
@@ -98,7 +98,7 @@ export function BillsTable({
               variant="ghost"
               size="sm"
               type="submit"
-              disabled={offset + productsPerPage > totalProducts}
+              disabled={offset + billsPerPage > totalBills}
             >
               Next
               <ChevronRight className="ml-2 h-4 w-4" />

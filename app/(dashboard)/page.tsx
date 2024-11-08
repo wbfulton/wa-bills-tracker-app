@@ -6,9 +6,18 @@ import { Button } from '@/components/ui/button';
 import { BillsTable } from './BillsTable';
 import { useLegislationPassedLegislature } from 'app/hooks/useLegislationPassedLegislature';
 import { updateLegislationPassedLegislature } from 'app/store/legislaton-store';
+import { useSearchParams } from 'next/navigation'
+import { Suspense } from 'react';
+
 
 const LegislationPage = () => {
   const legislation = useLegislationPassedLegislature();
+
+  const params = useSearchParams()
+  const offsetParam = params.get('offset')
+  const offset = !!offsetParam ? Number(offsetParam) : 0
+
+
 
   return (
     <Tabs defaultValue="all">
@@ -32,14 +41,20 @@ const LegislationPage = () => {
       </div>
       <TabsContent value="all">
         <BillsTable
-          legislation={legislation}
-          offset={0}
-          totalProducts={legislation.length}
+          legislation={legislation.slice(offset, offset + 20)}
+          offset={offset}
+          totalBills={legislation.length}
         />
       </TabsContent>
     </Tabs>
   );
 }
 
-export default LegislationPage;
+export default function Page() {
+  return (
+    <Suspense fallback={null}>
+      <LegislationPage />
+    </Suspense>
+  )
+};
 
