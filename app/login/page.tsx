@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card';
 import { signIn } from '@/lib/auth';
 
-export default function LoginPage() {
+export default async function LoginPage() {
   return (
     <div className="min-h-screen flex justify-center items-start md:items-center p-8">
       <Card className="w-full max-w-sm">

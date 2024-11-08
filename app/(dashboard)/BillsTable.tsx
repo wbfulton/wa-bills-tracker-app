@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  TableHead,
-  TableRow,
-  TableHeader,
-  TableBody,
-  Table
-} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -15,17 +9,24 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
-import { Product } from './product';
-import { useRouter } from 'next/navigation';
+import {
+  Table,
+  TableBody,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
+import { LegislationInfo } from 'app/api/types/legislationPassedLegislature';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { LegislationCard } from './LegislationCard';
 
-export function ProductsTable({
-  products,
+export function BillsTable({
+  legislation,
   offset,
   totalProducts
 }: {
-  products: any[];
+  legislation: LegislationInfo[];
   offset: number;
   totalProducts: number;
 }) {
@@ -40,12 +41,15 @@ export function ProductsTable({
     router.push(`/?offset=${offset}`, { scroll: false });
   }
 
+
+
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Products</CardTitle>
+        <CardTitle>Passed Legislation</CardTitle>
         <CardDescription>
-          Manage your products and view their sales performance.
+          Legislation passed legislature for 2023-24
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -53,23 +57,18 @@ export function ProductsTable({
           <TableHeader>
             <TableRow>
               <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
+                Biennum
               </TableHead>
-              <TableHead>Name</TableHead>
+              <TableHead >Name</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Price</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Total Sales
-              </TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
+              <TableHead className="hidden sm:table-cell">Agency</TableHead>
+              <TableHead className="hidden sm:table-cell">Type</TableHead>
+              <TableHead className="hidden sm:table-cell">ID</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {products.map((product) => (
-              <Product key={product.id} product={product} />
+            {legislation.map((leg) => (
+              <LegislationCard key={leg.BillId[0]} legislation={leg} />
             ))}
           </TableBody>
         </Table>
@@ -110,3 +109,4 @@ export function ProductsTable({
     </Card>
   );
 }
+

@@ -1,19 +1,14 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { File, PlusCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { ProductsTable } from './products-table';
+'use client'
 
-export default async function ProductsPage(
-  props: {
-    searchParams: Promise<{ q: string; offset: string }>;
-  }
-) {
-  const searchParams = await props.searchParams;
-  const search = searchParams.q ?? '';
-  const offset = searchParams.offset ?? 0;
-  const products: any[] = [];
-  const newOffset = 0;
-  const totalProducts = 0;
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { PlusCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { BillsTable } from './BillsTable';
+import { useLegislationPassedLegislature } from 'app/hooks/useLegislationPassedLegislature';
+import { updateLegislationPassedLegislature } from 'app/store/legislaton-store';
+
+const LegislationPage = () => {
+  const legislation = useLegislationPassedLegislature();
 
   return (
     <Tabs defaultValue="all">
@@ -27,27 +22,24 @@ export default async function ProductsPage(
           </TabsTrigger>
         </TabsList>
         <div className="ml-auto flex items-center gap-2">
-          <Button size="sm" variant="outline" className="h-8 gap-1">
-            <File className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Export
-            </span>
-          </Button>
-          <Button size="sm" className="h-8 gap-1">
+          <Button size="sm" className="h-8 gap-1" onClick={updateLegislationPassedLegislature}>
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
-              Add Product
+              Fetch
             </span>
           </Button>
         </div>
       </div>
       <TabsContent value="all">
-        <ProductsTable
-          products={products}
-          offset={newOffset ?? 0}
-          totalProducts={totalProducts}
+        <BillsTable
+          legislation={legislation}
+          offset={0}
+          totalProducts={legislation.length}
         />
       </TabsContent>
     </Tabs>
   );
 }
+
+export default LegislationPage;
+
