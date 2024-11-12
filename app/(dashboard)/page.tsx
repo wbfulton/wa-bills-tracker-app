@@ -8,6 +8,9 @@ import { useLegislationPassedLegislature } from 'app/hooks/useLegislationPassedL
 import { updateLegislationPassedLegislature } from 'app/store/legislaton-store';
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react';
+import { useLegislationFilters } from 'app/hooks/useFilters';
+import { updateLegislationFilters } from 'app/store/filters-store';
+import { Select, SelectTrigger, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectValue } from '@/components/ui/Selector';
 
 
 const LegislationPage = () => {
@@ -16,7 +19,7 @@ const LegislationPage = () => {
   const params = useSearchParams()
   const offsetParam = params.get('offset')
   const offset = !!offsetParam ? Number(offsetParam) : 0
-
+  const filters = useLegislationFilters();
 
 
   return (
@@ -31,7 +34,24 @@ const LegislationPage = () => {
           </TabsTrigger>
         </TabsList>
         <div className="ml-auto flex items-center gap-2">
-          <Button size="sm" className="h-8 gap-1" onClick={updateLegislationPassedLegislature}>
+          <Select onValueChange={(val) => updateLegislationFilters({ biennum: val })}>
+            <SelectTrigger className="h-8 gap-1">
+              <SelectValue placeholder="Select a Biennum" >{filters.biennum}</SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Biennum</SelectLabel>
+                <SelectItem value="2023-24">2023-24</SelectItem>
+                <SelectItem value="2022-23">2022-23</SelectItem>
+                <SelectItem value="2021-22">2021-22</SelectItem>
+                <SelectItem value="2020-21">2020-21</SelectItem>
+                <SelectItem value="2019-20">2019-20</SelectItem>
+                <SelectItem value="2018-19">2018-19</SelectItem>
+                <SelectItem value="2017-18">2017-18</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Button size="sm" variant="outline" className="h-8 gap-1" onClick={() => updateLegislationPassedLegislature(filters)}>
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
               Fetch

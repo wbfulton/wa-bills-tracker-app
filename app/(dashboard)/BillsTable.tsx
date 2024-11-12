@@ -20,6 +20,7 @@ import { LegislationInfo } from 'app/api/types/legislationPassedLegislature';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { LegislationCard } from './LegislationCard';
+import { useLegislationFilters } from 'app/hooks/useFilters';
 
 export function BillsTable({
   legislation,
@@ -41,6 +42,8 @@ export function BillsTable({
     router.push(`/?offset=${offset + billsPerPage}`, { scroll: false });
   }
 
+  const filters = useLegislationFilters();
+
 
 
 
@@ -49,7 +52,7 @@ export function BillsTable({
       <CardHeader>
         <CardTitle>Passed Legislation</CardTitle>
         <CardDescription>
-          Legislation passed legislature for 2023-24
+          {`Legislation passed legislature for ${filters.biennum}`}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -78,7 +81,7 @@ export function BillsTable({
           <div className="text-xs text-muted-foreground">
             Showing{' '}
             <strong>
-              {Math.max(0, Math.min(offset, totalBills) + 1)}-{Math.min(offset + billsPerPage, totalBills)}
+              {totalBills === 0 ? offset : offset + 1}-{Math.min(offset + billsPerPage, totalBills)}
             </strong>{' '}
             of <strong>{totalBills}</strong> bills
           </div>
