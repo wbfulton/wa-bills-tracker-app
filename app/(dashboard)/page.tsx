@@ -1,7 +1,7 @@
 'use client'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { PlusCircle } from 'lucide-react';
+import { ChevronRight, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BillsTable } from './BillsTable';
 import { useLegislationPassedLegislature } from 'app/hooks/useLegislationPassedLegislature';
@@ -11,6 +11,7 @@ import { Suspense } from 'react';
 import { useLegislationFilters } from 'app/hooks/useFilters';
 import { updateLegislationFilters } from 'app/store/filters-store';
 import { Select, SelectTrigger, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectValue } from '@/components/ui/Selector';
+import { ScrollArea, ScrollBar } from '@/components/ui/ScrollArea';
 
 
 const LegislationPage = () => {
@@ -25,14 +26,22 @@ const LegislationPage = () => {
   return (
     <Tabs defaultValue="all">
       <div className="flex items-center">
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="draft">Draft</TabsTrigger>
-          <TabsTrigger value="archived" className="hidden sm:flex">
-            Archived
-          </TabsTrigger>
-        </TabsList>
+        <ScrollArea className="w-96 whitespace-nowrap rounded-md border">
+          <TabsList className='flex w-max space-x-0.5'>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="prefiled">Prefiled</TabsTrigger>
+            <TabsTrigger value="introduction">Introduction</TabsTrigger>
+            <TabsTrigger value="committee">Committee</TabsTrigger>
+            <TabsTrigger value="second">Second Reading</TabsTrigger>
+            <TabsTrigger value="third">Third Reading</TabsTrigger>
+            <TabsTrigger className="hidden sm:flex" value="governor">
+              Governor
+            </TabsTrigger>
+          </TabsList>
+          <ScrollBar orientation="horizontal" className='h-1.5' />
+        </ScrollArea>
+
+
         <div className="ml-auto flex items-center gap-2">
           <Select onValueChange={(val) => updateLegislationFilters({ biennum: val })}>
             <SelectTrigger className="h-8 gap-1">
@@ -42,11 +51,8 @@ const LegislationPage = () => {
               <SelectGroup>
                 <SelectLabel>Biennum</SelectLabel>
                 <SelectItem value="2023-24">2023-24</SelectItem>
-                <SelectItem value="2022-23">2022-23</SelectItem>
                 <SelectItem value="2021-22">2021-22</SelectItem>
-                <SelectItem value="2020-21">2020-21</SelectItem>
                 <SelectItem value="2019-20">2019-20</SelectItem>
-                <SelectItem value="2018-19">2018-19</SelectItem>
                 <SelectItem value="2017-18">2017-18</SelectItem>
               </SelectGroup>
             </SelectContent>

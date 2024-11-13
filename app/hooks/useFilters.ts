@@ -13,10 +13,10 @@ export const useLegislationFilters = () => {
     const [filters, setFilters] = useState<LegislationFilters>(DEFAULT_FILTERS);
 
     useEffect(() => {
-        legislationFilters$.subscribe(val => {
+        const sub = legislationFilters$.subscribe(val => {
             setFilters(val)
         })
-        return () => legislationFilters$.unsubscribe();
+        return () => sub.unsubscribe();
     }, []);
 
     return filters;

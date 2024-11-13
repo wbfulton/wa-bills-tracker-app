@@ -86,26 +86,30 @@ export function BillsTable({
             of <strong>{totalBills}</strong> bills
           </div>
           <div className="flex">
-            <Button
-              formAction={prevPage}
-              variant="ghost"
-              size="sm"
-              type="submit"
-              disabled={offset === 0}
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              Prev
-            </Button>
-            <Button
-              formAction={nextPage}
-              variant="ghost"
-              size="sm"
-              type="submit"
-              disabled={offset + billsPerPage > totalBills}
-            >
-              Next
-              <ChevronRight className="ml-2 h-4 w-4" />
-            </Button>
+            {offset !== 0 &&
+              <Button
+                formAction={prevPage}
+                variant="ghost"
+                size="sm"
+                type="submit"
+                disabled={offset === 0}
+              >
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Prev
+              </Button>
+            }
+            {offset + billsPerPage <= totalBills &&
+              <Button
+                formAction={nextPage}
+                variant="ghost"
+                size="sm"
+                type="submit"
+                disabled={offset + billsPerPage > totalBills}
+              >
+                Next
+                <ChevronRight className="ml-2 h-4 w-4" />
+              </Button>
+            }
           </div>
         </form>
       </CardFooter>

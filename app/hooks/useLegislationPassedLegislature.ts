@@ -12,10 +12,10 @@ export const useLegislationPassedLegislature = () => {
     const [leg, setLeg] = useState<Array<LegislationInfo>>([]);
 
     useEffect(() => {
-        legislationPassedLegislature$.subscribe(val => {
+        const sub = legislationPassedLegislature$.subscribe(val => {
             setLeg(val)
         })
-        return () => legislationPassedLegislature$.unsubscribe();
+        return () => sub.unsubscribe();
     }, []);
 
     return leg;
