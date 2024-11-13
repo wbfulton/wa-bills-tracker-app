@@ -70,7 +70,6 @@ export function BillsTable({
               <TableHead>Status</TableHead>
               <TableHead className="hidden sm:table-cell">Agency</TableHead>
               <TableHead className="hidden sm:table-cell">Type</TableHead>
-              <TableHead className="hidden sm:table-cell">ID</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

@@ -17,8 +17,6 @@ export const LegislationCard = ({ legislation, details }: { legislation: Legisla
             </TableCell>
             <TableCell className="font-medium">{legislation.originalAgency}</TableCell>
             <TableCell className="font-medium">{legislation.shortLegislationType[0].longLegislationType}</TableCell>
-            <TableCell className="font-medium">{legislation.displayNumber}</TableCell>
-
         </TableRow>
     );
 }
