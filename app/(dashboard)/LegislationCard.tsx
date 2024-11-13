@@ -1,21 +1,23 @@
 import { Badge } from '@/components/ui/badge';
 
 import { TableCell, TableRow } from '@/components/ui/table';
+import { Legislation } from 'app/api/types/legislation';
 import { LegislationInfo } from 'app/api/types/legislationPassedLegislature';
 
-export const LegislationCard = ({ legislation }: { legislation: LegislationInfo }) => {
+export const LegislationCard = ({ legislation, details }: { legislation: LegislationInfo, details?: Legislation }) => {
     return (
         <TableRow>
-            <TableCell className="font-medium">{legislation.Biennium}</TableCell>
-            <TableCell className="font-medium">{legislation.BillId}</TableCell>
+            <TableCell className="font-medium">{legislation.biennium}</TableCell>
+            <TableCell className="font-medium">{legislation.billId}</TableCell>
+            <TableCell className="font-medium">{details?.shortDescription ?? 'N/A'}</TableCell>
             <TableCell>
                 <Badge variant="outline" className="capitalize">
-                    {legislation.Active ? 'Active' : 'Inactive'}
+                    {legislation.active ? 'Active' : 'Inactive'}
                 </Badge>
             </TableCell>
-            <TableCell className="font-medium">{legislation.OriginalAgency}</TableCell>
-            <TableCell className="font-medium">{legislation.ShortLegislationType[0].LongLegislationType}</TableCell>
-            <TableCell className="font-medium">{legislation.DisplayNumber}</TableCell>
+            <TableCell className="font-medium">{legislation.originalAgency}</TableCell>
+            <TableCell className="font-medium">{legislation.shortLegislationType[0].longLegislationType}</TableCell>
+            <TableCell className="font-medium">{legislation.displayNumber}</TableCell>
 
         </TableRow>
     );

@@ -5,13 +5,14 @@ import { ChevronRight, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BillsTable } from './BillsTable';
 import { useLegislationPassedLegislature } from 'app/hooks/useLegislationPassedLegislature';
-import { updateLegislationPassedLegislature } from 'app/store/legislaton-store';
+import { updateLegislationDetails, updateLegislationPassedLegislature } from 'app/store/legislaton-store';
 import { useSearchParams } from 'next/navigation'
-import { Suspense } from 'react';
+import { Suspense, useMemo } from 'react';
 import { useLegislationFilters } from 'app/hooks/useFilters';
 import { updateLegislationFilters } from 'app/store/filters-store';
 import { Select, SelectTrigger, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectValue } from '@/components/ui/Selector';
 import { ScrollArea, ScrollBar } from '@/components/ui/ScrollArea';
+import { useAsyncEffect } from 'app/hooks/useAsyncEffect';
 
 
 const LegislationPage = () => {
@@ -21,6 +22,16 @@ const LegislationPage = () => {
   const offsetParam = params.get('offset')
   const offset = !!offsetParam ? Number(offsetParam) : 0
   const filters = useLegislationFilters();
+
+  const bills = useMemo(() => legislation.slice(offset, offset + 20), [legislation, offset])
+
+  useAsyncEffect(
+    async () => {
+      await updateLegislationDetails(filters, bills.map(bill => Number(bill.billNumber[0])));
+    },
+    async () => { },
+    [filters, bills],
+  );
 
 
   return (
@@ -57,7 +68,10 @@ const LegislationPage = () => {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Button size="sm" variant="outline" className="h-8 gap-1" onClick={() => updateLegislationPassedLegislature(filters)}>
+          <Button size="sm" variant="outline" className="h-8 gap-1" onClick={() => {
+            updateLegislationPassedLegislature(filters)
+          }}
+          >
             <PlusCircle className="h-3.5 w-3.5" />
             <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
               Fetch
@@ -67,7 +81,7 @@ const LegislationPage = () => {
       </div>
       <TabsContent value="all">
         <BillsTable
-          legislation={legislation.slice(offset, offset + 20)}
+          legislation={bills}
           offset={offset}
           totalBills={legislation.length}
         />

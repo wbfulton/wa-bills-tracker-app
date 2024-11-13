@@ -1,53 +1,53 @@
 export interface LegislationInfo {
     /* 
-     * Format 2023-43
+     * Format 2023-24
     */
-    Biennium: [number],
+    biennium: [number],
     /*
      * e.g. "HB 1001"
      */
-    BillId: [
+    billId: [
         string
     ],
-    BillNumber: [
+    billNumber: [
         string
     ],
-    SubstituteVersion: [
+    substituteVersion: [
         string
     ],
-    EngrossedVersion: [
+    engrossedVersion: [
         string
     ],
-    ShortLegislationType: [
+    shortLegislationType: [
         {
-            ShortLegislationType: [
+            shortLegislationType: [
                 string
             ],
-            LongLegislationType: [
+            longLegislationType: [
                 string
             ]
         }
     ],
-    OriginalAgency: [
+    originalAgency: [
         string
     ],
-    Active: [
+    active: [
         string
     ],
-    DisplayNumber: [
+    displayNumber: [
         string
     ]
 }
 
 export interface LegislationPassedLegislature {
-    ArrayOfLegislationInfo: {
+    arrayOfLegislationInfo: {
         $: {
             xmlns: string,
             "xmlns:xsd": string,
             "xmlns:xsi": string
 
         }
-        LegislationInfo: Array<LegislationInfo>
+        legislationInfo: Array<LegislationInfo>
     }
 }
 

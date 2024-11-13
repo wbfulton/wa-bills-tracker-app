@@ -21,6 +21,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { LegislationCard } from './LegislationCard';
 import { useLegislationFilters } from 'app/hooks/useFilters';
+import { useLegislationDetails } from 'app/hooks/useLegislationDetails';
+import { useMemo } from 'react';
 
 export function BillsTable({
   legislation,
@@ -43,6 +45,7 @@ export function BillsTable({
   }
 
   const filters = useLegislationFilters();
+  const detailsMap = useLegislationDetails();
 
 
 
@@ -63,6 +66,7 @@ export function BillsTable({
                 Biennum
               </TableHead>
               <TableHead >Name</TableHead>
+              <TableHead>Desc</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="hidden sm:table-cell">Agency</TableHead>
               <TableHead className="hidden sm:table-cell">Type</TableHead>
@@ -71,7 +75,7 @@ export function BillsTable({
           </TableHeader>
           <TableBody>
             {legislation.map((leg) => (
-              <LegislationCard key={leg.BillId[0]} legislation={leg} />
+              <LegislationCard key={leg.billNumber[0]} legislation={leg} details={detailsMap.get(Number(leg.billNumber[0]))} />
             ))}
           </TableBody>
         </Table>
