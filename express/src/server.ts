@@ -77,8 +77,7 @@ app.get('/rcw', asyncWrapper(async (req: Request, res: Response) => {
 
 
 /**
- * RCW (revised code of washington)
- * XML and Docx option, but less data
+ * Returns pdf fiscal note for given package id
  */
 app.get('/legislation/fiscal-note/:packageID', asyncWrapper(async (req: Request, res: Response) => {
 
@@ -87,7 +86,7 @@ app.get('/legislation/fiscal-note/:packageID', asyncWrapper(async (req: Request,
             "Content-Type": "application/pdf"
         },
         params: {
-            packageID: req.params.packageID // 65580
+            packageID: req.params.packageID
         },
     })
 
@@ -116,6 +115,9 @@ interface FiscalNotesRes {
 }
 
 
+/**
+ * Returns array of fiscal note objects for given query
+ */
 app.post('/legislation/fiscal-notes', asyncWrapper(async (req: Request, res: Response) => {
     const response = await fiscalClient.postForm<FiscalNotesRes>('/fnspublicsearch/dosearch', {
         SessionYear: req.body.sessionYear,
