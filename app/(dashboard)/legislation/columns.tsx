@@ -3,7 +3,7 @@
 import { ColumnDef, Row, SortingFn, sortingFns } from "@tanstack/react-table"
 import { Legislation } from "app/types/legislation"
 
-import { ArrowDown, ArrowUp, MoreHorizontal } from "lucide-react"
+import { ArrowDown, ArrowUp, InfoIcon, MoreHorizontal } from "lucide-react"
 
 
 import { Button } from "@/components/ui/button"
@@ -24,6 +24,10 @@ import { LegislativeDocument } from "app/api/types/legislationDocuments"
 import Link from "next/link"
 import { ScrollArea } from "@/components/ui/ScrollArea"
 import { Separator } from "@/components/ui/Separator"
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipArrow } from "@/components/ui/tooltip"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Popover"
+import { InfoPopoverButton } from "@/components/ui/InfoPopoverButton"
 
 export const fuzzySort: SortingFn<any> = (rowA: Row<any>, rowB: Row<any>, columnId) => {
     let dir = 0
@@ -43,6 +47,7 @@ export const fuzzySort: SortingFn<any> = (rowA: Row<any>, rowB: Row<any>, column
     return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
+
 /**
  * Columns for legislation data table
  * @columns biennium, billId, shortDescription 
@@ -51,7 +56,14 @@ export const columns: ColumnDef<Legislation>[] = [
     {
         id: "biennium",
         accessorKey: "biennium",
-        header: "Biennium",
+        header: () => {
+            return (
+                <div className="flex items-center">
+                    Biennium
+                    <InfoPopoverButton title={"Biennium"} description={"Two year time period beginning on odd years. Legislation introduced during this time period can be considered in any sessions scheduled within the time period. Information is only available from 1991-current. e.g. '2023-24'"} align="center" side="top" />
+                </div>
+            )
+        },
     },
     {
         id: "billId",
@@ -59,24 +71,35 @@ export const columns: ColumnDef<Legislation>[] = [
         header: ({ column }) => {
             const isSortedAsc = column.getIsSorted() === "asc"
             return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(isSortedAsc, true)}
-                >
-                    ID
-                    {
-                        isSortedAsc ?
-                            <ArrowUp className="ml-2 h-4 w-4" /> :
-                            <ArrowDown className="ml-2 h-4 w-4" />
-                    }
-                </Button>
+                <div className="flex items-center">
+                    <Button
+                        className="p-0"
+                        variant="ghost"
+                        onClick={() => column.toggleSorting(isSortedAsc, true)}
+                    >
+                        ID
+                        {
+                            isSortedAsc ?
+                                <ArrowUp className="ml-2 h-4 w-4" /> :
+                                <ArrowDown className="ml-2 h-4 w-4" />
+                        }
+                    </Button>
+                    <InfoPopoverButton title={"Legislation ID"} description={"Prefix and bill number of a piece of legislation.  When paired with the biennium, it is a unique * reference to legislation.  This field is commonly used for display purposes on legislative reports. e.g 'HB 1001', '2SHB 1000'"} align="center" side="top" />
+                </div >
             )
         },
     },
     {
         id: "shortDescription",
         accessorKey: "shortDescription",
-        header: "Desc",
+        header: () => {
+            return (
+                <div className="flex items-center">
+                    Description
+                    <InfoPopoverButton title={"Short Description"} description={"Brief description of the legislation.  This is commonly used on legislative reports to briefly describe the topic of the legislation. e.g. 'Salmon recovery'"} align="center" side="top" />
+                </div>
+            )
+        },
         // sort by most relevant to search query
         sortingFn: fuzzySort
     },
@@ -84,7 +107,14 @@ export const columns: ColumnDef<Legislation>[] = [
         id: "sponsor",
         accessorKey: "sponsor",
         sortingFn: fuzzySort,
-        header: () => <div className="text-left">Sponsor</div>,
+        header: () => {
+            return (
+                <div className="flex items-center">
+                    Sponsor
+                    <InfoPopoverButton title={"Sponsor"} description={"Common display string of sponsor name.  If the bill is a committee, the string will contain the committee acronym followed by the primary sponsor of the original bill in parens. e.g. 'Smith', 'CB(Smith)'"} align="center" side="top" />
+                </div>
+            )
+        },
         cell: ({ row }) => {
             return <div className="text-left font-medium text-blue-800">{row.getValue("sponsor")}</div>
         },
