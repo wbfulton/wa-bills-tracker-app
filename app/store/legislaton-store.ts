@@ -2,7 +2,7 @@ import { getLegislationPassedLegislature } from "app/api/soap/getLegislationPass
 import { LegislationInfo } from "app/api/types/legislationPassedLegislature";
 import { BehaviorSubject } from "rxjs";
 import { LegislationFilters } from "./filters-store";
-import { BillNumber, Legislation } from "app/api/types/legislation";
+import { BillNumber, Legislation } from "app/api/types/legislationDetailed";
 import { getLegislationDetails } from "app/api/soap/getLegislationDetails";
 import { getLegislationFiscalNoteUrl } from "app/api/soap/getLegislationFiscalNoteUrl";
 
@@ -22,7 +22,7 @@ export const legislationDocuments$ = new BehaviorSubject<Map<BillNumber, BillDoc
 
 export const updateLegislationPassedLegislature = async (filters: LegislationFilters) => {
     try {
-        const data = await getLegislationPassedLegislature(filters.biennum)
+        const data = await getLegislationPassedLegislature(filters.biennium)
         const legis = data.arrayOfLegislationInfo.legislationInfo
 
         legislationPassedLegislature$.next(legis)
@@ -38,7 +38,7 @@ export const updateLegislationDetails = async (filters: LegislationFilters, bill
 
 
         await Promise.all(billNumbers.map(async (num) => {
-            const details = await getLegislationDetails(filters.biennum, num)
+            const details = await getLegislationDetails(filters.biennium, num)
             const detailedBill = details?.arrayOfLegislation?.legislation[0]
             newDetails.set(num, detailedBill)
 

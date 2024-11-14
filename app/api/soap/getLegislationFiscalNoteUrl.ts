@@ -1,4 +1,4 @@
-import { BillNumber, Legislation } from "../types/legislation";
+import { BillNumber, Legislation } from "../types/legislationDetailed";
 
 
 const SessionYearMap: { [key: string]: string } = {
@@ -29,7 +29,5 @@ export const getLegislationFiscalNoteUrl = async (legislation: Legislation): Pro
 
 
     return data?.data?.[0]?.packageId;
-
-
 }
 

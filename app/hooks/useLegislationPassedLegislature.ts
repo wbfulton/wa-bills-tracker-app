@@ -1,3 +1,5 @@
+'use client'
+
 import { LegislationInfo } from "app/api/types/legislationPassedLegislature";
 import { legislationPassedLegislature$ } from "app/store/legislaton-store";
 import { useState, useEffect } from "react";

@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge';
 
 import { TableCell, TableRow } from '@/components/ui/table';
-import { Legislation } from 'app/api/types/legislation';
+import { LegislationDetailed } from 'app/api/types/legislationDetailed';
 import { LegislationInfo } from 'app/api/types/legislationPassedLegislature';
 import { BillDocuments } from 'app/store/legislaton-store';
 import Link from 'next/link';
@@ -28,7 +28,7 @@ const BillTypePDFDash = new Set([
     "Resolution"
 ])
 
-export const LegislationCard = ({ legislation, details, documents }: { legislation: LegislationInfo, details?: Legislation, documents?: BillDocuments }) => {
+export const LegislationCard = ({ legislation, details, documents }: { legislation: LegislationInfo, details?: LegislationDetailed, documents?: BillDocuments }) => {
 
     return (
         <TableRow>

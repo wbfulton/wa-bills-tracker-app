@@ -1,4 +1,4 @@
-import { BillNumber } from "app/api/types/legislation";
+import { BillNumber } from "app/api/types/legislationDetailed";
 import { BillDocuments, legislationDocuments$ } from "app/store/legislaton-store";
 import { useState, useEffect } from "react";
 

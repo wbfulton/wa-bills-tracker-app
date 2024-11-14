@@ -5,6 +5,7 @@ import xml2js from 'xml2js';
 import dotenv from 'dotenv'
 
 import { asyncWrapper, convertKeysToLowerCase } from "./utils";
+import { LegislativeDocument, LegislativeDocumentReponseData } from "./types";
 // i love u alot <3
 
 dotenv.config()
@@ -128,6 +129,46 @@ app.post('/legislation/fiscal-notes', asyncWrapper(async (req: Request, res: Res
     const data = JSON.stringify(convertKeysToLowerCase(response.data))
 
     res.send(data);
+}))
+
+app.post('/legislation/documents', asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
+    const response = await legislationClient.post<LegislativeDocumentReponseData>('/LegislativeDocumentService.asmx/GetDocuments', {
+        biennium: req.body.biennium,
+        namedLike: req.body.namedLike
+    }, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
+
+
+
+
+    xml2js.parseString(response.data, (err, results: LegislativeDocumentReponseData) => {
+        if (err) next(err)
+
+        const documents: Array<LegislativeDocument> = results.ArrayOfLegislativeDocument.LegislativeDocument.map(raw => {
+            const document: LegislativeDocument = {
+                name: raw.Name[0],
+                shortFriendlyName: raw.ShortFriendlyName[0],
+                biennium: raw.Biennium[0],
+                longFriendlyName: raw.LongFriendlyName[0],
+                description: raw.Description[0],
+                type: raw.Type[0],
+                class: raw.Class[0],
+                htmUrl: raw.HtmUrl[0],
+                htmCreateDate: raw.HtmCreateDate[0],
+                htmLastModifiedDate: raw.HtmLastModifiedDate[0],
+                pdfUrl: raw.PdfUrl[0],
+                pdfCreateDate: raw.PdfCreateDate[0],
+                pdfLastModifiedDate: raw.PdfLastModifiedDate[0],
+                billId: Number(raw.BillId[0])
+            }
+
+            return document
+        })
+
+
+
+        res.send(JSON.stringify(documents));
+    });
+
 }))
 
 app.get('/legislation-details/:biennium/:billNumber', asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {

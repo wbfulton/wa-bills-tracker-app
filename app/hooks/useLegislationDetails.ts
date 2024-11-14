@@ -1,4 +1,4 @@
-import { BillNumber, Legislation } from "app/api/types/legislation";
+import { BillNumber, LegislationDetailed } from "app/api/types/legislationDetailed";
 import { legislationDetails$ } from "app/store/legislaton-store";
 import { useState, useEffect } from "react";
 
@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
  * @returns Array of legislation details
  */
 export const useLegislationDetails = () => {
-    const [details, setDetails] = useState<Map<BillNumber, Legislation>>(new Map());
+    const [details, setDetails] = useState<Map<BillNumber, LegislationDetailed>>(new Map());
 
     useEffect(() => {
         const sub = legislationDetails$.subscribe(val => {

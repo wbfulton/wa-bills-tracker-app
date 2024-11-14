@@ -1,5 +1,7 @@
 'use client'
 
+// MAKE SERVER COMPONENT
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChevronRight, PlusCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -57,13 +59,13 @@ const LegislationPage = () => {
 
 
         <div className="ml-auto flex items-center gap-2">
-          <Select onValueChange={(val) => updateLegislationFilters({ biennum: val })}>
+          <Select onValueChange={(val) => updateLegislationFilters({ biennium: val })}>
             <SelectTrigger className="h-8 gap-1">
-              <SelectValue placeholder="Select a Biennum" >{filters.biennum}</SelectValue>
+              <SelectValue placeholder="Select a Biennium" >{filters.biennium}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
-                <SelectLabel>Biennum</SelectLabel>
+                <SelectLabel>Biennium</SelectLabel>
                 <SelectItem value="2023-24">2023-24</SelectItem>
                 <SelectItem value="2021-22">2021-22</SelectItem>
                 <SelectItem value="2019-20">2019-20</SelectItem>

@@ -22,7 +22,6 @@ import { useRouter } from 'next/navigation';
 import { LegislationCard } from './LegislationCard';
 import { useLegislationFilters } from 'app/hooks/useFilters';
 import { useLegislationDetails } from 'app/hooks/useLegislationDetails';
-import { useMemo } from 'react';
 import { useLegislationDocuments } from 'app/hooks/useLegislationDocuments';
 
 export function BillsTable({
@@ -55,7 +54,7 @@ export function BillsTable({
       <CardHeader>
         <CardTitle>Passed Legislation</CardTitle>
         <CardDescription>
-          {`Legislation passed legislature for ${filters.biennum}`}
+          {`Legislation passed legislature for ${filters.biennium}`}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -63,7 +62,7 @@ export function BillsTable({
           <TableHeader>
             <TableRow>
               <TableHead className="hidden w-[100px] sm:table-cell">
-                Biennum
+                Biennium
               </TableHead>
               <TableHead >Name</TableHead>
               <TableHead>Desc</TableHead>

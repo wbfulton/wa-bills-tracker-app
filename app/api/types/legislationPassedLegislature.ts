@@ -1,8 +1,10 @@
+import { Biennium } from "app/types/legislation"
+
 export interface LegislationInfo {
     /* 
      * Format 2023-24
     */
-    biennium: [number],
+    biennium: [Biennium],
     /*
      * e.g. "HB 1001"
      */
