@@ -32,7 +32,6 @@ const convertKeysToLowerCase = (obj) => {
     }
     for (const key in obj) {
         const val = obj[key];
-        console.log(key, val, Object.prototype.toString.apply(val));
         if (Object.prototype.toString.apply(val) === '[object Object]') {
             output[(0, exports.lowercaseFirstLetter)(key)] = (0, exports.convertKeysToLowerCase)(val);
         }

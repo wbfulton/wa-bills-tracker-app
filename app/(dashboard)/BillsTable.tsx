@@ -23,6 +23,7 @@ import { LegislationCard } from './LegislationCard';
 import { useLegislationFilters } from 'app/hooks/useFilters';
 import { useLegislationDetails } from 'app/hooks/useLegislationDetails';
 import { useMemo } from 'react';
+import { useLegislationDocuments } from 'app/hooks/useLegislationDocuments';
 
 export function BillsTable({
   legislation,
@@ -46,8 +47,7 @@ export function BillsTable({
 
   const filters = useLegislationFilters();
   const detailsMap = useLegislationDetails();
-
-
+  const documentsMap = useLegislationDocuments();
 
 
   return (
@@ -70,11 +70,12 @@ export function BillsTable({
               <TableHead>Status</TableHead>
               <TableHead className="hidden sm:table-cell">Agency</TableHead>
               <TableHead className="hidden sm:table-cell">Type</TableHead>
+              <TableHead className="hidden sm:table-cell">Cost</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {legislation.map((leg) => (
-              <LegislationCard key={leg.billNumber[0]} legislation={leg} details={detailsMap.get(Number(leg.billNumber[0]))} />
+              <LegislationCard key={leg.billNumber[0]} legislation={leg} details={detailsMap.get(Number(leg.billNumber[0]))} documents={documentsMap.get(Number(leg.billNumber[0]))} />
             ))}
           </TableBody>
         </Table>

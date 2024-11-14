@@ -3,6 +3,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import xmlparser from 'express-xml-bodyparser';
 import xml2js from 'xml2js';
 import dotenv from 'dotenv'
+
 import { asyncWrapper, convertKeysToLowerCase } from "./utils";
 // i love u alot <3
 
@@ -80,6 +81,7 @@ app.get('/rcw', asyncWrapper(async (req: Request, res: Response) => {
  * XML and Docx option, but less data
  */
 app.get('/legislation/fiscal-note/:packageID', asyncWrapper(async (req: Request, res: Response) => {
+
     const response = await fiscalClient.get('/FNSPublicSearch/GetPDF', {
         headers: {
             "Content-Type": "application/pdf"
@@ -89,22 +91,41 @@ app.get('/legislation/fiscal-note/:packageID', asyncWrapper(async (req: Request,
         },
     })
 
-    res.send(response.data);
+    res.setHeader("Content-Type", "application/pdf");
+    res.status(200).send(response.data);
 
 }))
 
+interface FiscalNotesRes {
+    data: Array<{
+        AmendmentName: string
+        BillId: null,
+        BillNumber: string,
+        BillTitle: string,
+        BillType: string,
+        EngrossedNotation: string,
+        Origin: string,
+        ProposedFlag: string,
+        PublishedDate: Date,
+        Qualifier: string,
+        RequestType: string,
+        SessionYear: string,
+        SustituteNotation: string,
+        packageId: number
+    }>
+}
+
 
 app.post('/legislation/fiscal-notes', asyncWrapper(async (req: Request, res: Response) => {
-    const response = await fiscalClient.post('/fnspublicsearch/dosearch', {
-        SessionYear: 68, // req.data.sessionYear,
-        BillNumber: '', // req.data.billNumber,
-        BillTitle: '', //req.data.billTitle,
-        RequestType: 'bill', //req.data.requestType
+    const response = await fiscalClient.postForm<FiscalNotesRes>('/fnspublicsearch/dosearch', {
+        SessionYear: req.body.sessionYear,
+        BillNumber: req.body.billNumber,
+        BillTitle: req.body.billTitle,
+        RequestType: req.body.requestType
     })
     const data = JSON.stringify(convertKeysToLowerCase(response.data))
 
     res.send(data);
-
 }))
 
 app.get('/legislation-details/:biennium/:billNumber', asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {

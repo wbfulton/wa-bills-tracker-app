@@ -7,7 +7,7 @@ import { useEffect, useState, useMemo, useRef } from 'react';
  */
 export const useAsyncEffect = (
     mountCallback: () => Promise<any>,
-    unmountCallback: () => Promise<any>,
+    unmountCallback?: () => Promise<any>,
     deps: any[] = [],
 ): UseAsyncEffectResult => {
     const isMounted = useRef(false);
@@ -41,7 +41,7 @@ export const useAsyncEffect = (
                     setIsLoading(false);
                 } else {
                     // Component was unmounted before the mount callback returned, cancel it
-                    unmountCallback();
+                    if (!!unmountCallback) unmountCallback();
                 }
             } catch (error) {
                 if (!isMounted.current) return;
@@ -52,7 +52,7 @@ export const useAsyncEffect = (
 
         return () => {
             ignore = true;
-            if (mountSucceeded) {
+            if (mountSucceeded && !!unmountCallback) {
                 unmountCallback()
                     .then(() => {
                         if (!isMounted.current) return;

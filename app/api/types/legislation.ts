@@ -9,7 +9,7 @@ export interface Legislation {
     * Format hB 1001
     */
     billId: string
-    billNumber: BillNumber
+    billNumber: [BillNumber]
     substituteVersion: number
     engrossedVersion: number
     shortLegislationType: [
@@ -31,11 +31,11 @@ export interface Legislation {
     requestedByBudgetcommittee: boolean,
     requestedByDepartment: boolean,
     requestedByOther: boolean,
-    shortDescription: string,
+    shortDescription: [string],
     request: string,
     introducedDate: Date,
     currentStatus: {
-        billId: BillId,
+        billId: string,
         historyLine: string,
         actionDate: Date,
         amendedByOppositeBody: boolean,

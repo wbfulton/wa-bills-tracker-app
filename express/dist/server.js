@@ -54,7 +54,6 @@ app.get('/bill-text', (0, utils_1.asyncWrapper)((req, res, next) => __awaiter(vo
             biennium: req.params.biennium
         },
     });
-    console.log(response.data);
     res.send(response.data);
 })));
 /**
@@ -70,7 +69,6 @@ app.get('/rcw', (0, utils_1.asyncWrapper)((req, res) => __awaiter(void 0, void 0
             biennium: req.params.biennium
         }
     });
-    console.log(response.data);
     res.send(response.data);
 })));
 // https://fnspublic.ofm.wa.gov/FNSPublicSearch/GetPDF?packageID=65580
@@ -87,7 +85,6 @@ app.get('/legislation/fiscal-note/:packageID', (0, utils_1.asyncWrapper)((req, r
             packageID: req.params.packageID
         },
     });
-    console.log(response.data);
     res.send(response.data);
 })));
 app.post('/legislation/fiscal-notes', (0, utils_1.asyncWrapper)((req, res) => __awaiter(void 0, void 0, void 0, function* () {

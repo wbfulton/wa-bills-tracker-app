@@ -13,10 +13,12 @@ import { updateLegislationFilters } from 'app/store/filters-store';
 import { Select, SelectTrigger, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectValue } from '@/components/ui/Selector';
 import { ScrollArea, ScrollBar } from '@/components/ui/ScrollArea';
 import { useAsyncEffect } from 'app/hooks/useAsyncEffect';
+import { useLegislationDetails } from 'app/hooks/useLegislationDetails';
 
 
 const LegislationPage = () => {
   const legislation = useLegislationPassedLegislature();
+
 
   const params = useSearchParams()
   const offsetParam = params.get('offset')
@@ -29,9 +31,10 @@ const LegislationPage = () => {
     async () => {
       await updateLegislationDetails(filters, bills.map(bill => Number(bill.billNumber[0])));
     },
-    async () => { },
+    undefined,
     [filters, bills],
   );
+
 
 
   return (
