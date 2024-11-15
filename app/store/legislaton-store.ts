@@ -1,20 +1,24 @@
-import { LegislationDetailed } from "app/api/types/legislationDetailed";
-import { Legislation } from "app/types/legislation";
-import { BehaviorSubject } from "rxjs";
+import { LegislationDetailed } from 'app/api/types/legislationDetailed';
+import { Legislation } from 'app/types/legislation';
+import { BehaviorSubject } from 'rxjs';
 
-export const legislationPassedLegislature$ = new BehaviorSubject<Array<Legislation>>([])
+export const legislationPassedLegislature$ = new BehaviorSubject<
+  Array<Legislation>
+>([]);
 
-export const legislationDetails$ = new BehaviorSubject<Map<number, LegislationDetailed>>(new Map())
+export const legislationDetails$ = new BehaviorSubject<
+  Map<number, LegislationDetailed>
+>(new Map());
 
 export interface BillDocuments {
-    fullTextUrl?: string;
-    fiscalNoteUrl?: string;
+  fullTextUrl?: string;
+  fiscalNoteUrl?: string;
 }
 
 // WILL HAVE CONFLICT WITH JUST BILL NUMBER
-export const legislationDocuments$ = new BehaviorSubject<Map<number, BillDocuments>>(new Map())
-
-
+export const legislationDocuments$ = new BehaviorSubject<
+  Map<number, BillDocuments>
+>(new Map());
 
 // export const updateLegislationPassedLegislature = async (filters: LegislationFilters) => {
 //     try {
@@ -32,7 +36,6 @@ export const legislationDocuments$ = new BehaviorSubject<Map<number, BillDocumen
 //         const newDetails = legislationDetails$.getValue();
 //         const newDocumentUrls = legislationDocuments$.getValue();
 
-
 //         await Promise.all(billNumbers.map(async (num) => {
 //             const details = await getLegislationDetails(filters.biennium, num)
 //             const detailedBill = details?.arrayOfLegislation?.legislation[0]
@@ -43,7 +46,6 @@ export const legislationDocuments$ = new BehaviorSubject<Map<number, BillDocumen
 
 //         }))
 
-
 //         legislationDetails$.next(newDetails)
 //         legislationDocuments$.next(newDocumentUrls)
 
@@ -51,5 +53,3 @@ export const legislationDocuments$ = new BehaviorSubject<Map<number, BillDocumen
 //         console.log(error)
 //     }
 // }
-
-

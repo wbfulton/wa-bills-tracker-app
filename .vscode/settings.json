@@ -3,7 +3,6 @@
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "editor.wordWrap": "wordWrapColumn",
   "editor.wordWrapColumn": 110,
-  "editor.codeActionsOnSave": {
-    "source.removeUnusedImports": "explicit"
-  }
+  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+  "editor.formatOnSave": true
 }

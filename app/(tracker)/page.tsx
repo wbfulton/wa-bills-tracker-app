@@ -2,14 +2,11 @@ import { ScrollArea, ScrollBar } from '@/components/ui/ScrollArea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Suspense } from 'react';
 
-
 const LegislationPage = () => {
-
-
   return (
     <Tabs defaultValue="all">
       <ScrollArea className="w-96 whitespace-nowrap rounded-md border">
-        <TabsList className='flex w-max space-x-0.5'>
+        <TabsList className="flex w-max space-x-0.5">
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="prefiled">Prefiled</TabsTrigger>
           <TabsTrigger value="introduction">Introduction</TabsTrigger>
@@ -20,19 +17,17 @@ const LegislationPage = () => {
             Governor
           </TabsTrigger>
         </TabsList>
-        <ScrollBar orientation="horizontal" className='h-1.5' />
+        <ScrollBar orientation="horizontal" className="h-1.5" />
       </ScrollArea>
-      <TabsContent value="all">
-      </TabsContent>
+      <TabsContent value="all"></TabsContent>
     </Tabs>
   );
-}
+};
 
 export default function Page() {
   return (
     <Suspense fallback={null}>
       <LegislationPage />
     </Suspense>
-  )
-};
-
+  );
+}
