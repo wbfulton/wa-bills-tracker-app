@@ -1,23 +1,28 @@
+'use client'
+
 import { getLegislationDetails } from "app/api/soap/getLegislationDetails";
+import { getLegislationDocuments } from "app/api/soap/getLegislationDocuments";
 import { getLegislationPassedLegislature } from "app/api/soap/getLegislationPassedLegislature";
+import { useLegislationFilters } from "app/hooks/useFilters";
 import { Agency, Biennium, CompanionLegislation, Legislation, LegislationCurrentStatus, LongLegislationType, ShortLegislationType } from "app/types/legislation";
+import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
-import { getLegislationDocuments } from "app/api/soap/getLegislationDocuments";
+
 
 // call apis in this, or other pages
-async function getData(): Promise<Legislation[]> {
+async function getData(biennium: Biennium): Promise<Legislation[]> {
     try {
         // Fetch data from your API here.
-        const legInfo = (await getLegislationPassedLegislature(Biennium["2023-24"])).arrayOfLegislationInfo.legislationInfo.slice(1, 15);
+        const legInfo = (await getLegislationPassedLegislature(biennium)).arrayOfLegislationInfo.legislationInfo
 
 
 
         const arr = await Promise.all(legInfo.map(async (info) => {
 
-            const detail = (await getLegislationDetails(Biennium["2023-24"], Number(info.billNumber[0])))?.arrayOfLegislation?.legislation?.[0];
+            const detail = (await getLegislationDetails(biennium, Number(info.billNumber[0])))?.arrayOfLegislation?.legislation?.[0];
 
-            const documents = await getLegislationDocuments({ biennium: Biennium["2023-24"], text: info.billNumber[0] })
+            const documents = await getLegislationDocuments({ biennium, text: info.billNumber[0] })
 
 
             if (!detail) throw new Error()
@@ -91,14 +96,30 @@ async function getData(): Promise<Legislation[]> {
     }
 }
 
-export default async function LegislationTrackerPage() {
-    const data = await getData()
 
+
+export default function LegislationTrackerPage() {
+    const [data, setData] = useState<Array<Legislation>>([])
+    const [isLoading, setLoading] = useState<boolean>(false)
+
+    const filters = useLegislationFilters();
+
+    useEffect(() => {
+        if (!filters.biennium) return;
+
+        setLoading(true)
+
+        getData(filters.biennium).then(data => {
+            setData(data)
+            setLoading(false)
+        })
+
+    }, [filters])
 
 
     return (
         <div className="container mx-auto py-10">
-            <DataTable columns={columns} data={data} />
+            <DataTable columns={columns} data={data} isLoading={isLoading} />
         </div>
     )
 }

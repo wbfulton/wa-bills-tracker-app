@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 
 const ScrollArea = React.forwardRef<
     React.ElementRef<typeof ScrollAreaPrimitive.Root>,
-    React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> & { classNameViewport: string }
+    React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root> & { classNameViewport?: string }
 >(({ className, classNameViewport, children, ...props }, ref) => (
     <ScrollAreaPrimitive.Root
         ref={ref}

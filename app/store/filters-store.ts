@@ -1,12 +1,11 @@
+import { Biennium } from "app/types/legislation";
 import { BehaviorSubject } from "rxjs";
 
 export interface LegislationFilters {
-    biennium: string;
+    biennium?: Biennium;
 }
 
-export const DEFAULT_FILTERS: LegislationFilters = {
-    biennium: '2023-24'
-}
+export const DEFAULT_FILTERS: LegislationFilters = {}
 
 export const legislationFilters$ = new BehaviorSubject<LegislationFilters>(DEFAULT_FILTERS)
 

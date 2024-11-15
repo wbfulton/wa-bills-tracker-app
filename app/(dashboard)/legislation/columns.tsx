@@ -3,7 +3,7 @@
 import { ColumnDef, Row, SortingFn, sortingFns } from "@tanstack/react-table"
 import { Legislation } from "app/types/legislation"
 
-import { ArrowDown, ArrowUp, InfoIcon, MoreHorizontal } from "lucide-react"
+import { ArrowDown, ArrowUp, MoreHorizontal, ScrollText } from "lucide-react"
 
 
 import { Button } from "@/components/ui/button"
@@ -19,15 +19,12 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
+import { InfoPopoverButton } from "@/components/ui/InfoPopoverButton"
+import { ScrollArea } from "@/components/ui/ScrollArea"
 import { compareItems } from "@tanstack/match-sorter-utils"
 import { LegislativeDocument } from "app/api/types/legislationDocuments"
 import Link from "next/link"
-import { ScrollArea } from "@/components/ui/ScrollArea"
-import { Separator } from "@/components/ui/Separator"
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipArrow } from "@/components/ui/tooltip"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/Popover"
-import { InfoPopoverButton } from "@/components/ui/InfoPopoverButton"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 
 export const fuzzySort: SortingFn<any> = (rowA: Row<any>, rowB: Row<any>, columnId) => {
     let dir = 0
@@ -53,18 +50,6 @@ export const fuzzySort: SortingFn<any> = (rowA: Row<any>, rowB: Row<any>, column
  * @columns biennium, billId, shortDescription 
  */
 export const columns: ColumnDef<Legislation>[] = [
-    {
-        id: "biennium",
-        accessorKey: "biennium",
-        header: () => {
-            return (
-                <div className="flex items-center">
-                    Biennium
-                    <InfoPopoverButton title={"Biennium"} description={"Two year time period beginning on odd years. Legislation introduced during this time period can be considered in any sessions scheduled within the time period. Information is only available from 1991-current. e.g. '2023-24'"} align="center" side="top" />
-                </div>
-            )
-        },
-    },
     {
         id: "billId",
         accessorKey: "billId",
@@ -121,6 +106,13 @@ export const columns: ColumnDef<Legislation>[] = [
     },
     {
         id: "actions",
+        header: () => {
+            return (
+                <div className="flex items-center">
+                    Documents and More
+                </div>
+            )
+        },
         cell: ({ row }) => {
             const legislation = row.original
 
@@ -143,51 +135,77 @@ export const columns: ColumnDef<Legislation>[] = [
 
 
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
+                <div>
+                    <DropdownMenu>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                        <span className="sr-only">Open documents</span>
+                                        <ScrollText className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Documents</p>
+                            </TooltipContent>
+                        </Tooltip>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Documents</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            {Array.from(documentGroups.entries()).map(entry => {
+                                return (
+                                    <DropdownMenuSub key={`${legislation.biennium}${legislation.billNumber}${entry[0]}`}>
+                                        <DropdownMenuSubTrigger>
+                                            {entry[0]}
+                                        </DropdownMenuSubTrigger>
+                                        <DropdownMenuPortal>
+                                            <DropdownMenuSubContent>
+                                                <ScrollArea classNameViewport="max-h-[200px] max-w-[350px]">
+                                                    <DropdownMenuLabel>
+                                                        {`${entry[0]} PDFs`}
+                                                    </DropdownMenuLabel>
+                                                    <DropdownMenuSeparator />
+                                                    {entry[1].map(doc => (
+                                                        <DropdownMenuItem key={`${legislation.biennium}${legislation.billNumber}${doc.longFriendlyName}`}
+                                                        >
+                                                            <Link className="text-blue-600" passHref={true} target="_blank" href={doc.pdfUrl} >{`${doc.longFriendlyName}`}</Link>
+                                                        </DropdownMenuItem>)
+                                                    )}
+                                                </ScrollArea>
+                                            </DropdownMenuSubContent>
+                                        </DropdownMenuPortal>
+                                    </DropdownMenuSub>
+                                )
+                            })}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                    <DropdownMenu>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" className="h-8 w-8 p-0">
+                                        <span className="sr-only">Open menu</span>
+                                        <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Actions</p>
+                            </TooltipContent>
+                        </Tooltip>
 
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(legislation.billId)}
-                        >
-                            Copy Legislation ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        {Array.from(documentGroups.entries()).map(entry => {
-                            return (
-                                <DropdownMenuSub key={`${legislation.biennium}${legislation.billNumber}${entry[0]}`}>
-                                    <DropdownMenuSubTrigger>
-                                        {entry[0]}
-                                    </DropdownMenuSubTrigger>
-                                    <DropdownMenuPortal>
-                                        <DropdownMenuSubContent>
-                                            <ScrollArea classNameViewport="max-h-[200px] max-w-[350px]">
-                                                <DropdownMenuItem
-                                                    onClick={() => navigator.clipboard.writeText(legislation.billId)}
-                                                >
-                                                    {`${entry[0]} PDFs`}
-                                                </DropdownMenuItem>
-                                                <DropdownMenuSeparator />
-                                                {entry[1].map(doc => (
-                                                    <DropdownMenuItem key={`${legislation.biennium}${legislation.billNumber}${doc.longFriendlyName}`}
-                                                    >
-                                                        <Link className="text-blue-600" passHref={true} target="_blank" href={doc.pdfUrl} >{`${doc.longFriendlyName}`}</Link>
-                                                    </DropdownMenuItem>)
-                                                )}
-                                            </ScrollArea>
-                                        </DropdownMenuSubContent>
-                                    </DropdownMenuPortal>
-                                </DropdownMenuSub>
-                            )
-                        })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                                onClick={() => navigator.clipboard.writeText(legislation.billId)}
+                            >
+                                Copy Legislation ID
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             )
         },
     },
