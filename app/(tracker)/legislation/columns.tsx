@@ -169,8 +169,8 @@ export const columns: ColumnDef<Legislation>[] = [
 
       const documentGroups = new Map<string, Array<LegislativeDocument>>([]);
 
-      Object.keys(types).forEach((key) => {
-        documentGroups.set(key, []);
+      Array.from(types).forEach((type) => {
+        documentGroups.set(type, []);
       });
 
       legislation?.documents?.forEach((doc) => {
