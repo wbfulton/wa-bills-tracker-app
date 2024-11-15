@@ -1,5 +1,5 @@
-import { LegislativeDocument } from 'app/api/types/legislationDocuments';
-import { LegislativeFiscalData } from 'express/src/types';
+import { LegislativeDocument } from "app/api/types/legislationDocuments";
+import { LegislativeFiscalData } from "express/src/types";
 
 /**
  * Prefix and bill number of a piece of legislation.  When paired with the biennium, it is a unique * reference to legislation.  This field is commonly used for display purposes on legislative reports.
@@ -18,23 +18,23 @@ export type BillStatus = string;
  * @example "1991-92"
  */
 export enum Biennium {
-  '2023-24' = '2023-24',
-  '2021-22' = '2021-22',
-  '2019-20' = '2019-20',
-  '2017-18' = '2017-18',
-  '2015-16' = '2015-16',
-  '2013-14' = '2013-14',
-  '2011-12' = '2011-12',
-  '2009-10' = '2009-10',
-  '2007-08' = '2007-08',
-  '2005-06' = '2005-06',
-  '2003-04' = '2003-04',
-  '2001-02' = '2001-02',
-  '1999-00' = '1999-00',
-  '1997-98' = '1997-98',
-  '1995-96' = '1995-96',
-  '1993-94' = '1993-94',
-  '1991-92' = '1991-92'
+  "2023-24" = "2023-24",
+  "2021-22" = "2021-22",
+  "2019-20" = "2019-20",
+  "2017-18" = "2017-18",
+  "2015-16" = "2015-16",
+  "2013-14" = "2013-14",
+  "2011-12" = "2011-12",
+  "2009-10" = "2009-10",
+  "2007-08" = "2007-08",
+  "2005-06" = "2005-06",
+  "2003-04" = "2003-04",
+  "2001-02" = "2001-02",
+  "1999-00" = "1999-00",
+  "1997-98" = "1997-98",
+  "1995-96" = "1995-96",
+  "1993-94" = "1993-94",
+  "1991-92" = "1991-92",
 }
 
 /**
@@ -42,23 +42,23 @@ export enum Biennium {
  * @example "1991-92"
  */
 export enum BienniumToLegislativeYear {
-  '2023-24' = '68',
-  '2021-22' = '67',
-  '2019-20' = '66',
-  '2017-18' = '65',
-  '2015-16' = '64',
-  '2013-14' = '63',
-  '2011-12' = '62',
-  '2009-10' = '61',
-  '2007-08' = '60',
-  '2005-06' = '59',
-  '2003-04' = '58',
-  '2001-02' = '57',
-  '1999-00' = '56',
-  '1997-98' = '55',
-  '1995-96' = '54',
-  '1993-94' = '53',
-  '1991-92' = '52'
+  "2023-24" = "68",
+  "2021-22" = "67",
+  "2019-20" = "66",
+  "2017-18" = "65",
+  "2015-16" = "64",
+  "2013-14" = "63",
+  "2011-12" = "62",
+  "2009-10" = "61",
+  "2007-08" = "60",
+  "2005-06" = "59",
+  "2003-04" = "58",
+  "2001-02" = "57",
+  "1999-00" = "56",
+  "1997-98" = "55",
+  "1995-96" = "54",
+  "1993-94" = "53",
+  "1991-92" = "52",
 }
 
 /**
@@ -68,13 +68,13 @@ export enum BienniumToLegislativeYear {
 
  */
 export enum ShortLegislationType {
-  B = 'B',
-  JM = 'JM',
-  JR = 'JR',
-  I = 'I',
-  CR = 'CR',
-  R = 'R',
-  GA = 'GA'
+  B = "B",
+  JM = "JM",
+  JR = "JR",
+  I = "I",
+  CR = "CR",
+  R = "R",
+  GA = "GA",
 }
 
 /**
@@ -83,13 +83,13 @@ export enum ShortLegislationType {
  * @example "Concurrent Resolution"
  */
 export enum LongLegislationType {
-  Bill = 'Bill',
-  JointMemorial = 'Joint Memorial',
-  JointResolution = 'Joint Resolution',
-  ConcurrentResolution = 'Concurrent Resolution',
-  GubernatorialAppointment = 'Gubernatorial Appointment',
-  Resolution = 'Resolution',
-  Initiative = 'Initiative'
+  Bill = "Bill",
+  JointMemorial = "Joint Memorial",
+  JointResolution = "Joint Resolution",
+  ConcurrentResolution = "Concurrent Resolution",
+  GubernatorialAppointment = "Gubernatorial Appointment",
+  Resolution = "Resolution",
+  Initiative = "Initiative",
 }
 
 /**
@@ -97,8 +97,8 @@ export enum LongLegislationType {
  * @example "House"
  */
 export enum Agency {
-  House = 'House',
-  Senate = 'Senate'
+  House = "House",
+  Senate = "Senate",
 }
 
 /** Current status of legislation */
@@ -169,7 +169,7 @@ export interface Legislation {
    */
   substituteVersion: number;
   /**
-   * The engrossed version of the bill number.  Each time the bill is amended on the floor by the body it originated in, its engrossed version is incremented by one.
+   * The engrossed version of the bill number.  Each time the bill is amended on the floor by the body it originated in, its engrossed version is incremented by one.
    * @example 1
    */
   engrossedVersion: number;

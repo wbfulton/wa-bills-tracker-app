@@ -1,10 +1,9 @@
-import express, { Express, NextFunction, Request, Response } from 'express';
-import axios, { AxiosRequestConfig } from 'axios';
-import xmlparser from 'express-xml-bodyparser';
-import xml2js from 'xml2js';
-import dotenv from 'dotenv';
+import axios, { AxiosRequestConfig } from "axios";
+import dotenv from "dotenv";
+import express, { Express, NextFunction, Request, Response } from "express";
+import xmlparser from "express-xml-bodyparser";
+import xml2js from "xml2js";
 
-import { asyncWrapper } from './utils';
 import {
   CompanionLegislation,
   CurrentStatus,
@@ -17,8 +16,9 @@ import {
   LegislativeDocument,
   LegislativeDocumentResponseData,
   LegislativeFiscalData,
-  LegislativeFiscalDataResponse
-} from './types';
+  LegislativeFiscalDataResponse,
+} from "./types";
+import { asyncWrapper } from "./utils";
 // i love u alot <3
 
 dotenv.config();
@@ -27,10 +27,10 @@ const app: Express = express();
 const port = process.env.PORT || 8080;
 
 app.use(function (req: Request, res: Response, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000'); // update to match the domain you will make the request from
+  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // update to match the domain you will make the request from
   res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
   );
   next();
 });
@@ -38,20 +38,20 @@ app.use(function (req: Request, res: Response, next) {
 app.use(express.json());
 app.use(xmlparser());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello World!");
 });
 
 const filesClient = axios.create({
-  baseURL: 'https://lawfilesext.leg.wa.gov'
+  baseURL: "https://lawfilesext.leg.wa.gov",
 });
 
 const fiscalClient = axios.create({
-  baseURL: 'https://fnspublic.ofm.wa.gov'
+  baseURL: "https://fnspublic.ofm.wa.gov",
 });
 
 const legislationClient = axios.create({
-  baseURL: 'https://wslwebservices.leg.wa.gov'
+  baseURL: "https://wslwebservices.leg.wa.gov",
 });
 
 /**
@@ -59,15 +59,15 @@ const legislationClient = axios.create({
  * XML and Docx option, but less data
  */
 app.get(
-  '/bill-text',
+  "/bill-text",
   asyncWrapper(async (req: Request, res: Response) => {
     const config: AxiosRequestConfig<string> = {
       headers: {
-        'Content-Type': 'text/html'
+        "Content-Type": "text/html",
       },
       params: {
-        biennium: req.params.biennium
-      }
+        biennium: req.params.biennium,
+      },
     };
 
     const response = await filesClient.get<string>(
@@ -84,17 +84,17 @@ app.get(
  * XML and Docx option, but less data
  */
 app.get(
-  '/rcw',
+  "/rcw",
   asyncWrapper(async (req: Request, res: Response) => {
     const response = await filesClient.get(
-      '/Law/RCW/RCW%20%20%201%20%20TITLE/RCW%20%20%201%20%20%20TITLE/RCW%20%20%201%20%20%20TITLE.htm',
+      "/Law/RCW/RCW%20%20%201%20%20TITLE/RCW%20%20%201%20%20%20TITLE/RCW%20%20%201%20%20%20TITLE.htm",
       {
         headers: {
-          'Content-Type': 'text/html'
+          "Content-Type": "text/html",
         },
         params: {
-          biennium: req.params.biennium
-        }
+          biennium: req.params.biennium,
+        },
       }
     );
 
@@ -106,18 +106,18 @@ app.get(
  * Returns pdf fiscal note for given package id
  */
 app.get(
-  '/legislation/fiscal-note/:packageID',
+  "/legislation/fiscal-note/:packageID",
   asyncWrapper(async (req: Request, res: Response) => {
-    const response = await fiscalClient.get('/FNSPublicSearch/GetPDF', {
+    const response = await fiscalClient.get("/FNSPublicSearch/GetPDF", {
       headers: {
-        'Content-Type': 'application/pdf'
+        "Content-Type": "application/pdf",
       },
       params: {
-        packageID: req.params.packageID
-      }
+        packageID: req.params.packageID,
+      },
     });
 
-    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader("Content-Type", "application/pdf");
     res.status(200).send(response.data);
   })
 );
@@ -126,15 +126,15 @@ app.get(
  * Returns array of fiscal note objects for given query
  */
 app.post(
-  '/legislation/fiscal-notes',
+  "/legislation/fiscal-notes",
   asyncWrapper(async (req: Request, res: Response) => {
     const response = await fiscalClient.postForm<LegislativeFiscalDataResponse>(
-      '/fnspublicsearch/dosearch',
+      "/fnspublicsearch/dosearch",
       {
         SessionYear: req.body.sessionYear,
         BillNumber: req.body.billNumber,
         BillTitle: req.body.billTitle,
-        RequestType: req.body.requestType
+        RequestType: req.body.requestType,
       }
     );
     const raw = response.data.data.map((data) => {
@@ -155,7 +155,7 @@ app.post(
         sustituteNotation: data.SustituteNotation,
         qualifier: data.Qualifier,
         origin: data.Origin,
-        fiscalNotePDFUrl: `https://fnspublic.ofm.wa.gov/FNSPublicSearch/GetPDF/${data.packageId}`
+        fiscalNotePDFUrl: `https://fnspublic.ofm.wa.gov/FNSPublicSearch/GetPDF/${data.packageId}`,
       };
 
       return cleaned;
@@ -166,16 +166,16 @@ app.post(
 );
 
 app.post(
-  '/legislation/documents',
+  "/legislation/documents",
   asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const response =
       await legislationClient.post<LegislativeDocumentResponseData>(
-        '/LegislativeDocumentService.asmx/GetDocuments',
+        "/LegislativeDocumentService.asmx/GetDocuments",
         {
           biennium: req.body.biennium,
-          namedLike: req.body.namedLike
+          namedLike: req.body.namedLike,
         },
-        { headers: { 'content-type': 'application/x-www-form-urlencoded' } }
+        { headers: { "content-type": "application/x-www-form-urlencoded" } }
       );
 
     xml2js.parseString(
@@ -199,7 +199,7 @@ app.post(
               pdfUrl: raw.PdfUrl[0],
               pdfCreateDate: raw.PdfCreateDate[0],
               pdfLastModifiedDate: raw.PdfLastModifiedDate[0],
-              billId: Number(raw.BillId[0])
+              billId: Number(raw.BillId[0]),
             };
 
             return document;
@@ -212,18 +212,18 @@ app.post(
 );
 
 app.get(
-  '/legislation-details/:biennium/:billNumber',
+  "/legislation-details/:biennium/:billNumber",
   asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const response = await legislationClient.get(
-      '/LegislationService.asmx/GetLegislation',
+      "/LegislationService.asmx/GetLegislation",
       {
         headers: {
-          Host: 'wslwebservices.leg.wa.gov'
+          Host: "wslwebservices.leg.wa.gov",
         },
         params: {
           biennium: req.params.biennium,
-          billNumber: req.params.billNumber
-        }
+          billNumber: req.params.billNumber,
+        },
       }
     );
 
@@ -245,7 +245,7 @@ app.get(
           partialVeto: Boolean(info.CurrentStatus[0].PartialVeto[0]),
           veto: Boolean(info.CurrentStatus[0].Veto[0]),
           amendmentsExist: Boolean(info.CurrentStatus[0].AmendmentsExist[0]),
-          status: info.CurrentStatus[0].Status[0]
+          status: info.CurrentStatus[0].Status[0],
         };
         const compRaw = info?.Companions?.[0].Companion?.[0];
         const compValid =
@@ -257,7 +257,7 @@ app.get(
           : {
               biennium: compRaw.Biennium[0],
               billId: compRaw.BillId[0],
-              status: compRaw.Status[0]
+              status: compRaw.Status[0],
             };
 
         const clean: LegislationDetail = {
@@ -289,7 +289,7 @@ app.get(
           primeSponsorID: Number(info.PrimeSponsorID[0]),
           longDescription: info.LongDescription[0],
           legalTitle: info.LegalTitle[0],
-          companionLeglislation: companion
+          companionLeglislation: companion,
         };
 
         res.send(JSON.stringify(clean));
@@ -299,17 +299,17 @@ app.get(
 );
 
 app.get(
-  '/passed-legislature/:biennium',
+  "/passed-legislature/:biennium",
   asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
     const response = await legislationClient.get(
-      '/LegislationService.asmx/GetLegislationPassedLegislature',
+      "/LegislationService.asmx/GetLegislationPassedLegislature",
       {
         headers: {
-          Host: 'wslwebservices.leg.wa.gov'
+          Host: "wslwebservices.leg.wa.gov",
         },
         params: {
-          biennium: req.params.biennium
-        }
+          biennium: req.params.biennium,
+        },
       }
     );
 
@@ -334,7 +334,7 @@ app.get(
               info.ShortLegislationType[0].LongLegislationType[0],
             originalAgency: info.OriginalAgency[0],
             active: Boolean(info.Active[0]),
-            displayNumber: Number(info.DisplayNumber[0])
+            displayNumber: Number(info.DisplayNumber[0]),
           };
 
           return clean;

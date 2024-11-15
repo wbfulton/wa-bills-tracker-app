@@ -1,6 +1,6 @@
-import { legislationDetails$ } from 'app/store/legislaton-store';
-import { LegislationDetail } from 'express/src/types';
-import { useState, useEffect } from 'react';
+import { legislationDetails$ } from "app/store/legislaton-store";
+import { LegislationDetail } from "express/src/types";
+import { useState, useEffect } from "react";
 
 /**
  * Returns current store of legislation details and names

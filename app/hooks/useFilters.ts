@@ -1,6 +1,6 @@
-import { DEFAULT_FILTERS, LegislationFilters } from 'app/store/filters-store';
-import { legislationFilters$ } from 'app/store/filters-store';
-import { useState, useEffect } from 'react';
+import { DEFAULT_FILTERS, LegislationFilters } from "app/store/filters-store";
+import { legislationFilters$ } from "app/store/filters-store";
+import { useState, useEffect } from "react";
 
 /**
  * Returns current store of legislation filters

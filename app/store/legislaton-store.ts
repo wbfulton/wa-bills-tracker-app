@@ -1,6 +1,6 @@
-import { LegislationDetailed } from 'app/api/types/legislationDetailed';
-import { Legislation } from 'app/types/legislation';
-import { BehaviorSubject } from 'rxjs';
+import { LegislationDetailed } from "app/api/types/legislationDetailed";
+import { Legislation } from "app/types/legislation";
+import { BehaviorSubject } from "rxjs";
 
 export const legislationPassedLegislature$ = new BehaviorSubject<
   Array<Legislation>

@@ -1,5 +1,5 @@
-import { Biennium } from 'app/types/legislation';
-import { LegislationInfo } from 'express/src/types';
+import { Biennium } from "app/types/legislation";
+import { LegislationInfo } from "express/src/types";
 
 export const getLegislationPassedLegislature = async (
   biennium: Biennium

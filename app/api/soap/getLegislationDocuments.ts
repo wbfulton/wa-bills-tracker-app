@@ -1,24 +1,24 @@
-import { Biennium } from 'app/types/legislation';
-import { LegislativeDocument } from '../types/legislationDocuments';
+import { Biennium } from "app/types/legislation";
+import { LegislativeDocument } from "../types/legislationDocuments";
 
 export const getLegislationDocuments = async ({
   biennium,
-  text
+  text,
 }: {
   biennium: Biennium;
   text: string;
 }): Promise<Array<LegislativeDocument>> => {
   try {
     const res = await fetch(`http://localhost:8080/legislation/documents`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json'
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         biennium,
-        namedLike: text
-      })
+        namedLike: text,
+      }),
     });
 
     const data = await res.json();

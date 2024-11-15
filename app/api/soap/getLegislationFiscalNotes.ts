@@ -1,26 +1,26 @@
-import { LegislativeFiscalData } from 'express/src/types';
-import { Biennium, BienniumToLegislativeYear } from 'app/types/legislation';
+import { LegislativeFiscalData } from "express/src/types";
+import { Biennium, BienniumToLegislativeYear } from "app/types/legislation";
 
 export const getLegislationFiscalNotes = async ({
   biennium,
   billNumber,
-  billTitle
+  billTitle,
 }: {
   biennium: Biennium;
   billNumber: number;
   billTitle: string;
 }): Promise<Array<LegislativeFiscalData>> => {
   const res = await fetch(`http://localhost:8080/legislation/fiscal-notes`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json'
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      sessionYear: BienniumToLegislativeYear[biennium] ?? '68',
+      sessionYear: BienniumToLegislativeYear[biennium] ?? "68",
       billNumber,
-      billTitle
-    })
+      billTitle,
+    }),
   });
 
   const data: Array<LegislativeFiscalData> = await res.json();

@@ -1,5 +1,5 @@
-import { Biennium } from 'app/types/legislation';
-import { BehaviorSubject } from 'rxjs';
+import { Biennium } from "app/types/legislation";
+import { BehaviorSubject } from "rxjs";
 
 export interface LegislationFilters {
   biennium?: Biennium;
@@ -16,6 +16,6 @@ export const updateLegislationFilters = async (
 ) => {
   legislationFilters$.next({
     ...legislationFilters$.getValue(),
-    ...newFilters
+    ...newFilters,
   });
 };

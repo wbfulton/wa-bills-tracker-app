@@ -1,18 +1,18 @@
-'use client';
-import { InfoIcon } from 'lucide-react';
-import { Button } from './button';
+"use client";
+import { InfoIcon } from "lucide-react";
+import { Button } from "./button";
 import {
   Card,
   CardHeader,
   CardTitle,
   CardContent,
-  CardDescription
-} from './card';
-import { Popover, PopoverContent, PopoverTrigger } from './Popover';
-import { PopoverContentProps } from '@radix-ui/react-popover';
+  CardDescription,
+} from "./card";
+import { Popover, PopoverContent, PopoverTrigger } from "./Popover";
+import { PopoverContentProps } from "@radix-ui/react-popover";
 
 interface InfoPopoverButtonProps
-  extends Pick<PopoverContentProps, 'align' | 'side'> {
+  extends Pick<PopoverContentProps, "align" | "side"> {
   title: string;
   description: string;
 }
@@ -24,7 +24,7 @@ export const InfoPopoverButton = ({
   align,
   side,
   title,
-  description
+  description,
 }: InfoPopoverButtonProps) => {
   return (
     <Popover>

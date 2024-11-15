@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   ColumnDef,
@@ -12,24 +12,24 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable
-} from '@tanstack/react-table';
+  useReactTable,
+} from "@tanstack/react-table";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
-  TableRow
-} from '@/components/ui/table';
-import { memo, useEffect, useState } from 'react';
+  TableRow,
+} from "@/components/ui/table";
+import { memo, useEffect, useState } from "react";
 
-import { Spinner } from '@/components/icons';
-import { InfoPopoverButton } from '@/components/ui/InfoPopoverButton';
-import { Label } from '@/components/ui/Label';
+import { Spinner } from "@/components/icons";
+import { InfoPopoverButton } from "@/components/ui/InfoPopoverButton";
+import { Label } from "@/components/ui/Label";
 import {
   Select,
   SelectContent,
@@ -37,19 +37,19 @@ import {
   SelectItem,
   SelectLabel,
   SelectTrigger,
-  SelectValue
-} from '@/components/ui/Selector';
-import { Skeleton } from '@/components/ui/Skeleton';
-import { rankItem } from '@tanstack/match-sorter-utils';
-import { useLegislationFilters } from 'app/hooks/useFilters';
-import { updateLegislationFilters } from 'app/store/filters-store';
-import { Biennium } from 'app/types/legislation';
-import { fuzzySort } from './columns';
+  SelectValue,
+} from "@/components/ui/Selector";
+import { Skeleton } from "@/components/ui/Skeleton";
+import { rankItem } from "@tanstack/match-sorter-utils";
+import { useLegislationFilters } from "app/hooks/useFilters";
+import { updateLegislationFilters } from "app/store/filters-store";
+import { Biennium } from "app/types/legislation";
+import { fuzzySort } from "./utils";
 
 const BienniumSelector = memo(
   ({
     disabled,
-    onChange
+    onChange,
   }: {
     disabled?: boolean;
     onChange?: (biennium: Biennium) => void;
@@ -61,7 +61,9 @@ const BienniumSelector = memo(
         disabled={disabled}
         value={filters.biennium}
         onValueChange={(biennium: Biennium) => {
-          updateLegislationFilters({ biennium });
+          updateLegislationFilters({ biennium }).catch((err) =>
+            console.log(err)
+          );
           onChange?.(biennium);
         }}
       >
@@ -72,7 +74,7 @@ const BienniumSelector = memo(
           >
             Biennium
             <InfoPopoverButton
-              title={'Biennium'}
+              title={"Biennium"}
               description={
                 "Two year time period beginning on odd years. Legislation introduced during this time period can be considered in any sessions scheduled within the time period. Information is only available from 1991-current. e.g. '2023-24'"
               }
@@ -99,9 +101,10 @@ const BienniumSelector = memo(
   }
 );
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value);
+  const itemRank = rankItem(row.getValue(columnId), value as string);
 
   // Store the itemRank info
   addMeta({ itemRank });
@@ -121,21 +124,21 @@ export function DataTable<TData, TValue>({
   filters,
   columns,
   data,
-  isLoading
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState<GlobalFilterTableState>();
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10
+    pageSize: 10,
   });
 
   const table = useReactTable({
     data,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter
+      fuzzy: fuzzyFilter,
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -147,18 +150,18 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     globalFilterFn: fuzzyFilter,
     sortingFns: {
-      fuzzy: fuzzySort
+      fuzzy: fuzzySort,
     },
     state: {
       sorting,
       columnFilters,
       globalFilter,
-      pagination
-    }
+      pagination,
+    },
   });
 
   useEffect(() => {
-    table.getColumn('billId')?.toggleSorting(false, true);
+    table.getColumn("billId")?.toggleSorting(false, true);
   }, []);
   // i still love u <3
 
@@ -184,11 +187,11 @@ export function DataTable<TData, TValue>({
           disabled={isLoading}
           type="text"
           placeholder="Search..."
-          value={table.getState().globalFilter ?? ''}
+          value={(table.getState().globalFilter as string) ?? ""}
           onChange={(event) => {
             // find way to disable bill id sort on search
             table.setGlobalFilter(event.target.value);
-            table.getColumn('shortDescription')?.toggleSorting(false, true);
+            table.getColumn("shortDescription")?.toggleSorting(false, true);
           }}
           className="max-w-48 mr-2"
         />
@@ -238,7 +241,7 @@ export function DataTable<TData, TValue>({
                   table.getRowModel().rows.map((row) => (
                     <TableRow
                       key={row.id}
-                      data-state={row.getIsSelected() && 'selected'}
+                      data-state={row.getIsSelected() && "selected"}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <TableCell key={cell.id}>
@@ -265,10 +268,10 @@ export function DataTable<TData, TValue>({
           </div>
           <div className="flex items-center justify-end space-x-2 py-4">
             <div className="text-xs text-muted-foreground">
-              Showing{' '}
+              Showing{" "}
               <strong>
                 {firstRowIndex}-{lastRowIndex}
-              </strong>{' '}
+              </strong>{" "}
               of <strong>{table.getRowCount()}</strong> bills
             </div>
             <Button

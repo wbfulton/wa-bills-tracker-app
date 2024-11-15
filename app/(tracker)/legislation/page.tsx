@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
-import { getLegislationDetails } from 'app/api/soap/getLegislationDetails';
-import { getLegislationDocuments } from 'app/api/soap/getLegislationDocuments';
-import { getLegislationPassedLegislature } from 'app/api/soap/getLegislationPassedLegislature';
-import { useLegislationFilters } from 'app/hooks/useFilters';
+import { getLegislationDetails } from "app/api/soap/getLegislationDetails";
+import { getLegislationDocuments } from "app/api/soap/getLegislationDocuments";
+import { getLegislationFiscalNotes } from "app/api/soap/getLegislationFiscalNotes";
+import { getLegislationPassedLegislature } from "app/api/soap/getLegislationPassedLegislature";
+import { useLegislationFilters } from "app/hooks/useFilters";
 import {
   Agency,
   Biennium,
@@ -11,12 +12,11 @@ import {
   Legislation,
   LegislationCurrentStatus,
   LongLegislationType,
-  ShortLegislationType
-} from 'app/types/legislation';
-import { useEffect, useState } from 'react';
-import { columns } from './columns';
-import { DataTable } from './data-table';
-import { getLegislationFiscalNotes } from 'app/api/soap/getLegislationFiscalNotes';
+  ShortLegislationType,
+} from "app/types/legislation";
+import { useEffect, useState } from "react";
+import { columns } from "./columns";
+import { DataTable } from "./data-table";
 
 // call apis in this, or other pages
 async function getData(biennium: Biennium): Promise<Legislation[]> {
@@ -29,12 +29,12 @@ async function getData(biennium: Biennium): Promise<Legislation[]> {
         const detail = await getLegislationDetails(biennium, info.billNumber);
         const documents = await getLegislationDocuments({
           biennium,
-          text: String(info.billNumber)
+          text: String(info.billNumber),
         });
         const fiscalNotes = await getLegislationFiscalNotes({
           biennium,
           billNumber: info.billNumber,
-          billTitle: detail.shortDescription
+          billTitle: detail.shortDescription,
         });
 
         if (!detail) throw new Error();
@@ -44,7 +44,7 @@ async function getData(biennium: Biennium): Promise<Legislation[]> {
             ? {
                 biennium: detail.companionLeglislation.biennium as Biennium,
                 billId: detail.companionLeglislation.billId,
-                status: detail.companionLeglislation.status
+                status: detail.companionLeglislation.status,
               }
             : undefined;
 
@@ -62,7 +62,7 @@ async function getData(biennium: Biennium): Promise<Legislation[]> {
             | undefined,
           companion,
           documents,
-          fiscalNotes
+          fiscalNotes,
         };
 
         return leg;
@@ -87,10 +87,12 @@ export default function LegislationTrackerPage() {
 
     setLoading(true);
 
-    getData(filters.biennium).then((data) => {
-      setData(data);
-      setLoading(false);
-    });
+    getData(filters.biennium)
+      .then((data) => {
+        setData(data);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
   }, [filters]);
 
   return (

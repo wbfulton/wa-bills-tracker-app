@@ -3,7 +3,10 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prepare": "husky",
+    "lint": "eslint 'app/**/*.{ts,tsx}'",
+    "format-all": "prettier --write ."
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.1",
@@ -43,11 +46,21 @@
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown",
+    "app/**/*.{ts,tsx}": "eslint"
+  },
   "prettier": {
     "arrowParens": "always",
-    "singleQuote": true,
+    "trailingComma": "es5",
     "tabWidth": 2,
-    "trailingComma": "none"
+    "semi": true,
+    "singleQuote": false
   },
   "pnpm": {
     "overrides": {
@@ -59,7 +72,15 @@
     "@eslint/js": "^9.14.0",
     "@types/eslint__js": "^8.42.3",
     "eslint": "^9.14.0",
+    "eslint-config-next": "^15.0.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "prettier": "^3.3.3",
+    "prettier-eslint": "^16.3.0",
     "typescript": "5.5.3",
     "typescript-eslint": "^8.14.0"
   }

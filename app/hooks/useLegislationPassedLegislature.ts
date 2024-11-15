@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { legislationPassedLegislature$ } from 'app/store/legislaton-store';
-import { Legislation } from 'app/types/legislation';
-import { useState, useEffect } from 'react';
+import { legislationPassedLegislature$ } from "app/store/legislaton-store";
+import { Legislation } from "app/types/legislation";
+import { useState, useEffect } from "react";
 
 /**
  * Returns current store of legislation passed legislature

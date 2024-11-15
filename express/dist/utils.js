@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 var __awaiter =
   (this && this.__awaiter) ||
   function (thisArg, _arguments, P, generator) {
@@ -19,7 +19,7 @@ var __awaiter =
       }
       function rejected(value) {
         try {
-          step(generator['throw'](value));
+          step(generator["throw"](value));
         } catch (e) {
           reject(e);
         }
@@ -32,7 +32,7 @@ var __awaiter =
       step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
   };
-Object.defineProperty(exports, '__esModule', { value: true });
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertKeysToLowerCase =
   exports.lowercaseFirstLetter =
   exports.asyncWrapper =
@@ -55,17 +55,17 @@ exports.lowercaseFirstLetter = lowercaseFirstLetter;
 const convertKeysToLowerCase = (obj) => {
   const output = {};
   if (
-    Object.prototype.toString.apply(obj) !== '[object Object]' &&
-    Object.prototype.toString.apply(obj) !== '[object Array]'
+    Object.prototype.toString.apply(obj) !== "[object Object]" &&
+    Object.prototype.toString.apply(obj) !== "[object Array]"
   ) {
     return obj;
   }
   for (const key in obj) {
     const val = obj[key];
-    if (Object.prototype.toString.apply(val) === '[object Object]') {
+    if (Object.prototype.toString.apply(val) === "[object Object]") {
       output[(0, exports.lowercaseFirstLetter)(key)] = (0,
       exports.convertKeysToLowerCase)(val);
-    } else if (Object.prototype.toString.apply(val) === '[object Array]') {
+    } else if (Object.prototype.toString.apply(val) === "[object Array]") {
       const lowerCase = (0, exports.lowercaseFirstLetter)(key);
       output[lowerCase] = [];
       for (let j = 0; j < val.length; j++) {

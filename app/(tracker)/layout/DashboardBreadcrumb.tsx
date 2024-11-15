@@ -4,9 +4,9 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbSeparator,
-  BreadcrumbPage
-} from '@/components/ui/breadcrumb';
-import Link from 'next/link';
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 export const DashboardBreadcrumb = () => {
   return (

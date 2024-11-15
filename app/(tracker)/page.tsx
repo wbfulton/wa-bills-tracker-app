@@ -1,6 +1,6 @@
-import { ScrollArea, ScrollBar } from '@/components/ui/ScrollArea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Suspense } from 'react';
+import { ScrollArea, ScrollBar } from "@/components/ui/ScrollArea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Suspense } from "react";
 
 const LegislationPage = () => {
   return (

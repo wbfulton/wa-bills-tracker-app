@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
 import {
   PanelLeft,
   Link,
@@ -8,8 +8,8 @@ import {
   ShoppingCart,
   Package,
   Users2,
-  LineChart
-} from 'lucide-react';
+  LineChart,
+} from "lucide-react";
 
 export const MobileSideNavbar = () => {
   return (

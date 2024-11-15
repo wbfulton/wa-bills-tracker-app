@@ -1,6 +1,6 @@
 interface GeneratedType {
-  'xmlns:xsd': string;
-  'xmlns:xsi': string;
+  "xmlns:xsd": string;
+  "xmlns:xsi": string;
   xmlns: string;
 }
 

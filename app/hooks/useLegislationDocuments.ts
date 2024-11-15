@@ -1,9 +1,9 @@
-import { BillNumber } from 'app/api/types/legislationDetailed';
+import { BillNumber } from "app/api/types/legislationDetailed";
 import {
   BillDocuments,
-  legislationDocuments$
-} from 'app/store/legislaton-store';
-import { useState, useEffect } from 'react';
+  legislationDocuments$,
+} from "app/store/legislaton-store";
+import { useState, useEffect } from "react";
 
 /**
  * Returns current store of legislation document urls

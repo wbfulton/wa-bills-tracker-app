@@ -1,6 +1,6 @@
-import { VercelLogo } from '@/components/icons';
-import { NavItem } from '@/components/ui/NavItem';
-import { Landmark, Settings, Users2 } from 'lucide-react';
+import { VercelLogo } from "@/components/icons";
+import { NavItem } from "@/components/ui/NavItem";
+import { Landmark, Settings, Users2 } from "lucide-react";
 
 export const DesktopSideNavbar = () => {
   return (

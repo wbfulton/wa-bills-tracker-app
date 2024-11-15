@@ -1,19 +1,19 @@
-import { useEffect, useState, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from "react";
 
 // https://marmelab.com/blog/2023/01/11/use-async-effect-react.html
 
 /**
  * Hook to run an async effect on mount and another on unmount.
  */
-export const useAsyncEffect = (
-  mountCallback: () => Promise<any>,
-  unmountCallback?: () => Promise<any>,
-  deps: any[] = []
-): UseAsyncEffectResult => {
+export function useAsyncEffect<T>(
+  mountCallback: () => Promise<T>,
+  unmountCallback?: () => Promise<T>,
+  deps: unknown[] = []
+): UseAsyncEffectResult {
   const isMounted = useRef(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<unknown>(undefined);
-  const [result, setResult] = useState<any>();
+  const [result, setResult] = useState<unknown>();
 
   useEffect(() => {
     isMounted.current = true;
@@ -58,23 +58,22 @@ export const useAsyncEffect = (
             if (!isMounted.current) return;
             setResult(undefined);
           })
-          .catch((error: unknown) => {
+          .catch((error: Error) => {
             if (!isMounted.current) return;
             setError(error);
           });
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 
   return useMemo(
     () => ({ result, error, isLoading }),
     [result, error, isLoading]
   );
-};
+}
 
 export interface UseAsyncEffectResult {
-  result: any;
-  error: any;
+  result: unknown;
+  error: unknown;
   isLoading: boolean;
 }

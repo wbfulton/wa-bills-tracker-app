@@ -1,5 +1,5 @@
-import { Biennium } from 'app/types/legislation';
-import { LegislationDetail } from 'express/src/types';
+import { Biennium } from "app/types/legislation";
+import { LegislationDetail } from "express/src/types";
 
 export const getLegislationDetails = async (
   biennium: Biennium,

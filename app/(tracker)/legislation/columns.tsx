@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { ColumnDef, Row, SortingFn, sortingFns } from '@tanstack/react-table';
-import { Legislation } from 'app/types/legislation';
+import { ColumnDef } from "@tanstack/react-table";
+import { Legislation } from "app/types/legislation";
 
 import {
   ArrowDown,
   ArrowUp,
   MoreHorizontal,
   Receipt,
-  ScrollText
-} from 'lucide-react';
+  ScrollText,
+} from "lucide-react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,43 +22,24 @@ import {
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import { InfoPopoverButton } from '@/components/ui/InfoPopoverButton';
-import { ScrollArea } from '@/components/ui/ScrollArea';
-import { compareItems } from '@tanstack/match-sorter-utils';
-import { LegislativeDocument } from 'app/api/types/legislationDocuments';
-import Link from 'next/link';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { InfoPopoverButton } from "@/components/ui/InfoPopoverButton";
+import { ScrollArea } from "@/components/ui/ScrollArea";
 import {
   Tooltip,
   TooltipContent,
-  TooltipTrigger
-} from '@/components/ui/tooltip';
-import { JSX } from 'react';
-
-export const fuzzySort: SortingFn<any> = (
-  rowA: Row<any>,
-  rowB: Row<any>,
-  columnId
-) => {
-  let dir = 0;
-
-  const rowARank = (rowA.columnFiltersMeta[columnId] as any)?.itemRank!;
-  const rowBRank = (rowB.columnFiltersMeta[columnId] as any)?.itemRank!;
-
-  // Only sort by rank if the column has ranking information
-  if (!!rowARank && !!rowBRank) {
-    dir = compareItems(rowARank, rowBRank);
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
-};
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { LegislativeDocument } from "app/api/types/legislationDocuments";
+import Link from "next/link";
+import { JSX } from "react";
+import { fuzzySort } from "./utils";
 
 const ActionItem = ({
   text,
   icon,
-  dropDownMenuItems
+  dropDownMenuItems,
 }: {
   text: string;
   icon: JSX.Element;
@@ -94,10 +75,10 @@ const ActionItem = ({
  */
 export const columns: ColumnDef<Legislation>[] = [
   {
-    id: 'billId',
-    accessorKey: 'billId',
+    id: "billId",
+    accessorKey: "billId",
     header: ({ column }) => {
-      const isSortedAsc = column.getIsSorted() === 'asc';
+      const isSortedAsc = column.getIsSorted() === "asc";
       return (
         <div className="flex items-center">
           <Button
@@ -113,7 +94,7 @@ export const columns: ColumnDef<Legislation>[] = [
             )}
           </Button>
           <InfoPopoverButton
-            title={'Legislation ID'}
+            title={"Legislation ID"}
             description={
               "Prefix and bill number of a piece of legislation.  When paired with the biennium, it is a unique * reference to legislation.  This field is commonly used for display purposes on legislative reports. e.g 'HB 1001', '2SHB 1000'"
             }
@@ -122,17 +103,17 @@ export const columns: ColumnDef<Legislation>[] = [
           />
         </div>
       );
-    }
+    },
   },
   {
-    id: 'shortDescription',
-    accessorKey: 'shortDescription',
+    id: "shortDescription",
+    accessorKey: "shortDescription",
     header: () => {
       return (
         <div className="flex items-center">
           Description
           <InfoPopoverButton
-            title={'Short Description'}
+            title={"Short Description"}
             description={
               "Brief description of the legislation.  This is commonly used on legislative reports to briefly describe the topic of the legislation. e.g. 'Salmon recovery'"
             }
@@ -143,18 +124,18 @@ export const columns: ColumnDef<Legislation>[] = [
       );
     },
     // sort by most relevant to search query
-    sortingFn: fuzzySort
+    sortingFn: fuzzySort,
   },
   {
-    id: 'sponsor',
-    accessorKey: 'sponsor',
+    id: "sponsor",
+    accessorKey: "sponsor",
     sortingFn: fuzzySort,
     header: () => {
       return (
         <div className="flex items-center">
           Sponsor
           <InfoPopoverButton
-            title={'Sponsor'}
+            title={"Sponsor"}
             description={
               "Common display string of sponsor name.  If the bill is a committee, the string will contain the committee acronym followed by the primary sponsor of the original bill in parens. e.g. 'Smith', 'CB(Smith)'"
             }
@@ -167,13 +148,13 @@ export const columns: ColumnDef<Legislation>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-left font-medium text-blue-800">
-          {row.getValue('sponsor')}
+          {row.getValue("sponsor")}
         </div>
       );
-    }
+    },
   },
   {
-    id: 'actions',
+    id: "actions",
     header: () => {
       return <div className="flex items-center">Documents and More</div>;
     },
@@ -188,8 +169,8 @@ export const columns: ColumnDef<Legislation>[] = [
 
       const documentGroups = new Map<string, Array<LegislativeDocument>>([]);
 
-      types.entries().forEach((entry) => {
-        documentGroups.set(entry[0], []);
+      Object.keys(types).forEach((key) => {
+        documentGroups.set(key, []);
       });
 
       legislation?.documents?.forEach((doc) => {
@@ -275,7 +256,7 @@ export const columns: ColumnDef<Legislation>[] = [
         <div>
           {!!legislation?.documents && legislation?.documents?.length > 0 && (
             <ActionItem
-              text={'Documents'}
+              text={"Documents"}
               dropDownMenuItems={documentMenuItems}
               icon={<ScrollText className="h-4 w-4" />}
             />
@@ -283,18 +264,20 @@ export const columns: ColumnDef<Legislation>[] = [
           {!!legislation?.fiscalNotes &&
             legislation?.fiscalNotes.length > 0 && (
               <ActionItem
-                text={'Fiscal Notes'}
+                text={"Fiscal Notes"}
                 dropDownMenuItems={fiscalNotesMenuItems}
                 icon={<Receipt className="h-4 w-4" />}
               />
             )}
           <ActionItem
-            text={'Actions'}
+            text={"Actions"}
             dropDownMenuItems={
               <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(legislation.billId)
-                }
+                onClick={() => {
+                  navigator.clipboard
+                    .writeText(legislation.billId)
+                    .catch((err) => console.log(err));
+                }}
               >
                 Copy Legislation ID
               </DropdownMenuItem>
@@ -303,6 +286,6 @@ export const columns: ColumnDef<Legislation>[] = [
           />
         </div>
       );
-    }
-  }
+    },
+  },
 ];
