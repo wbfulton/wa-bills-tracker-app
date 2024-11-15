@@ -5,7 +5,7 @@ import xml2js from 'xml2js';
 import dotenv from 'dotenv'
 
 import { asyncWrapper, convertKeysToLowerCase } from "./utils";
-import { LegislationInfo, LegislationInfoRaw, LegislationInfoResponseData, LegislativeDocument, LegislativeDocumentResponseData, LegislativeFiscalData, LegislativeFiscalDataResponse } from "./types";
+import { CompanionLegislation, CurrentStatus, LegislationDetail, LegislationDetailRaw, LegislationDetailResponseData, LegislationInfo, LegislationInfoRaw, LegislationInfoResponseData, LegislativeDocument, LegislativeDocumentResponseData, LegislativeFiscalData, LegislativeFiscalDataResponse } from "./types";
 // i love u alot <3
 
 dotenv.config()
@@ -184,13 +184,61 @@ app.get('/legislation-details/:biennium/:billNumber', asyncWrapper(async (req: R
         },
     })
 
-    xml2js.parseString(response.data, (err, results) => {
+    xml2js.parseString(response.data, (err, parsedResponse: LegislationDetailResponseData) => {
         if (err) next(err)
 
-        // parsing to json
-        const data = JSON.stringify(convertKeysToLowerCase(results))
+        const info: LegislationDetailRaw = parsedResponse.ArrayOfLegislation.Legislation[0]
 
-        res.send(data);
+        const currentStatus: CurrentStatus = {
+            billId: info.CurrentStatus[0].BillId[0],
+            historyLine: info.CurrentStatus[0].HistoryLine[0],
+            actionDate: new Date(info.CurrentStatus[0].ActionDate[0]),
+            amendedByOppositeBody: Boolean(info.CurrentStatus[0].AmendedByOppositeBody[0]),
+            partialVeto: Boolean(info.CurrentStatus[0].PartialVeto[0]),
+            veto: Boolean(info.CurrentStatus[0].Veto[0]),
+            amendmentsExist: Boolean(info.CurrentStatus[0].AmendmentsExist[0]),
+            status: info.CurrentStatus[0].Status[0]
+        }
+        const compRaw = info?.Companions?.[0].Companion?.[0]
+        const compValid = !!compRaw?.Biennium[0] && !!compRaw?.BillId[0] && !!compRaw?.Status[0]
+        const companion: CompanionLegislation | undefined = !compValid ? undefined : {
+            biennium: compRaw.Biennium[0],
+            billId: compRaw.BillId[0],
+            status: compRaw.Status[0]
+        }
+
+        const clean: LegislationDetail = {
+            biennium: info.Biennium[0],
+            billId: info.BillId[0],
+            billNumber: Number(info.BillNumber[0]),
+            substituteVersion: Number(info.SubstituteVersion[0]),
+            engrossedVersion: Number(info.EngrossedVersion[0]),
+            shortLegislationType: info.ShortLegislationType[0].ShortLegislationType[0],
+            longLegislationType: info.ShortLegislationType[0].LongLegislationType[0],
+            originalAgency: info.OriginalAgency[0],
+            active: Boolean(info.Active[0]),
+            stateFiscalNote: Boolean(info.StateFiscalNote[0]),
+            localFiscalNote: Boolean(info.LocalFiscalNote[0]),
+            appropriations: Boolean(info.Appropriations[0]),
+            requestedByGovernor: Boolean(info.RequestedByGovernor[0]),
+            requestedByBudgetCommittee: Boolean(info.RequestedByBudgetCommittee[0]),
+            requestedByDepartment: Boolean(info.RequestedByDepartment[0]),
+            requestedByOther: Boolean(info.RequestedByOther[0]),
+            shortDescription: info.ShortDescription[0],
+            request: info.Request[0],
+            introducedDate: new Date(info.IntroducedDate[0]),
+            currentStatus,
+            sponsor: info.Sponsor[0],
+            primeSponsorID: Number(info.PrimeSponsorID[0]),
+            longDescription: info.LongDescription[0],
+            legalTitle: info.LegalTitle[0],
+            companionLeglislation: companion
+
+        }
+
+
+
+        res.send(JSON.stringify(clean));
     });
 
 }))

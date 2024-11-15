@@ -130,3 +130,114 @@ export interface LegislationInfo {
     active: boolean
     displayNumber: number
 }
+
+export interface LegislationDetailResponseData {
+    ArrayOfLegislation: ArrayOfLegislation
+}
+
+export interface ArrayOfLegislation {
+    $: GeneratedType
+    Legislation: LegislationDetailRaw[]
+}
+
+
+
+export interface LegislationDetailRaw {
+    Biennium: string[]
+    BillId: string[]
+    BillNumber: string[]
+    SubstituteVersion: string[]
+    EngrossedVersion: string[]
+    ShortLegislationType: ShortLegislationType[]
+    OriginalAgency: string[]
+    Active: string[]
+    StateFiscalNote: string[]
+    LocalFiscalNote: string[]
+    Appropriations: string[]
+    RequestedByGovernor: string[]
+    RequestedByBudgetCommittee: string[]
+    RequestedByDepartment: string[]
+    RequestedByOther: string[]
+    ShortDescription: string[]
+    Request: string[]
+    IntroducedDate: string[]
+    CurrentStatus: CurrentStatusRaw[]
+    Sponsor: string[]
+    PrimeSponsorID: string[]
+    LongDescription: string[]
+    LegalTitle: string[]
+    Companions?: CompanionRaw[]
+}
+
+export interface ShortLegislationType {
+    ShortLegislationType: string[]
+    LongLegislationType: string[]
+}
+
+export interface CurrentStatusRaw {
+    BillId: string[]
+    HistoryLine: string[]
+    ActionDate: string[]
+    AmendedByOppositeBody: string[]
+    PartialVeto: string[]
+    Veto: string[]
+    AmendmentsExist: string[]
+    Status: string[]
+}
+
+export interface CompanionRaw {
+    Companion: Companion2Raw[]
+}
+
+export interface Companion2Raw {
+    Biennium: string[]
+    BillId: string[]
+    Status: string[]
+}
+
+export interface LegislationDetail {
+    biennium: string
+    billId: string
+    billNumber: number
+    substituteVersion: number
+    engrossedVersion: number
+    shortLegislationType: string
+    longLegislationType: string
+    originalAgency: string
+    active: boolean
+    stateFiscalNote: boolean
+    localFiscalNote: boolean
+    appropriations: boolean
+    requestedByGovernor: boolean
+    requestedByBudgetCommittee: boolean
+    requestedByDepartment: boolean
+    requestedByOther: boolean
+    shortDescription: string
+    request: string
+    introducedDate: Date
+    currentStatus: CurrentStatus
+    sponsor: string
+    primeSponsorID: number
+    longDescription: string
+    legalTitle: string
+    companionLeglislation?: CompanionLegislation
+}
+
+
+export interface CurrentStatus {
+    billId: string
+    historyLine: string
+    actionDate: Date
+    amendedByOppositeBody: boolean
+    partialVeto: boolean
+    veto: boolean
+    amendmentsExist: boolean
+    status: string
+}
+
+export interface CompanionLegislation {
+    biennium: string
+    billId: string
+    status: string
+}
+

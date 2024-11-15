@@ -19,76 +19,36 @@ async function getData(biennium: Biennium): Promise<Legislation[]> {
 
 
         const arr = await Promise.all(legInfo.map(async (info) => {
-            const detail = (await getLegislationDetails(biennium, info.billNumber))?.arrayOfLegislation?.legislation?.[0];
-
+            const detail = await getLegislationDetails(biennium, info.billNumber)
             const documents = await getLegislationDocuments({ biennium, text: String(info.billNumber) })
-
             const fiscalNotes = await getLegislationFiscalNotes({
                 biennium,
                 billNumber: info.billNumber,
-                billTitle: detail.shortDescription[0]
+                billTitle: detail.shortDescription
             })
 
 
             if (!detail) throw new Error()
 
-            const compainDetail = detail.companions[0]
-            const companions = Object.prototype.toString.apply(compainDetail) === '[object Array]' ? (compainDetail as unknown as {
-                companion: {
-                    biennium: [string],
-                    billId: [string],
-                    status: [string]
-                }
-            }).companion : undefined;
-
-
-            const companion: CompanionLegislation | undefined = (!!companions) ? {
-                biennium: companions.biennium[0] as Biennium,
-                billId: companions.billId[0],
-                status: companions.status[0]
+            const companion: CompanionLegislation | undefined = !!detail.companionLeglislation ? {
+                biennium: detail.companionLeglislation.biennium as Biennium,
+                billId: detail.companionLeglislation.billId,
+                status: detail.companionLeglislation.status
 
             } : undefined
 
-            const currentStatus: LegislationCurrentStatus = {
-                billId: detail.currentStatus[0].billId[0],
-                historyLine: detail.currentStatus[0].historyLine[0],
-                actionDate: new Date(detail.currentStatus[0].actionDate[0]),
-                amendedByOppositeBody: Boolean(detail.currentStatus[0].amendedByOppositeBody[0]),
-                partialVeto: Boolean(detail.currentStatus[0].partialVeto[0]),
-                veto: Boolean(detail.currentStatus[0].veto[0]),
-                amendmentsExist: Boolean(detail.currentStatus[0].amendmentsExist[0]),
-                status: detail.currentStatus[0].status[0]
-            }
-
             const leg: Legislation = {
+                ...info,
+                ...detail,
                 biennium: info.biennium as Biennium,
-                billId: info.billId,
-                billNumber: info.billNumber,
-                substituteVersion: info.substituteVersion,
-                engrossedVersion: info.engrossedVersion,
                 shortLegislationType: info.shortLegislationType as ShortLegislationType,
                 longLegislationType: info.shortLegislationType as LongLegislationType,
                 originalAgency: info.originalAgency as Agency,
-                active: info.active,
-                stateFiscalNote: Boolean(detail.stateFiscalNote[0]),
-                localFiscalNote: Boolean(detail.localFiscalNote[0]),
-                appropriations: Boolean(detail.appropriations[0]),
-                requestedByGovernor: Boolean(detail.requestedByGovernor[0]),
-                requestedByBudgetCommittee: Boolean(detail.requestedByBudgetCommittee[0]),
-                requestedByDepartment: Boolean(detail.requestedByDepartment[0]),
-                requestedByOther: Boolean(detail.requestedByOther[0]),
-                shortDescription: detail.shortDescription[0],
-                request: detail.request[0],
                 introducedDate: new Date(detail.introducedDate),
-
-                sponsor: detail.sponsor[0],
-                primeSponsorID: Number(detail.primeSponsorID[0]),
-                longDescription: detail.longDescription[0],
-                legalTitle: detail.legalTitle[0],
-                currentStatus,
+                currentStatus: detail.currentStatus as LegislationCurrentStatus | undefined,
                 companion,
                 documents,
-                fiscalNotes
+                fiscalNotes,
             }
 
             return leg
