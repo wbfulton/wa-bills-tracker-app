@@ -3,7 +3,7 @@
 import { ColumnDef, Row, SortingFn, sortingFns } from "@tanstack/react-table"
 import { Legislation } from "app/types/legislation"
 
-import { ArrowDown, ArrowUp, MoreHorizontal, ScrollText } from "lucide-react"
+import { ArrowDown, ArrowUp, MoreHorizontal, Receipt, ScrollText } from "lucide-react"
 
 
 import { Button } from "@/components/ui/button"
@@ -25,6 +25,7 @@ import { compareItems } from "@tanstack/match-sorter-utils"
 import { LegislativeDocument } from "app/api/types/legislationDocuments"
 import Link from "next/link"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { JSX } from "react"
 
 export const fuzzySort: SortingFn<any> = (rowA: Row<any>, rowB: Row<any>, columnId) => {
     let dir = 0
@@ -42,6 +43,32 @@ export const fuzzySort: SortingFn<any> = (rowA: Row<any>, rowB: Row<any>, column
 
     // Provide an alphanumeric fallback for when the item ranks are equal
     return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+}
+
+const ActionItem = ({ text, icon, dropDownMenuItems }: { text: string, icon: JSX.Element, dropDownMenuItems: JSX.Element }) => {
+
+    return (
+        <DropdownMenu>
+            <Tooltip>
+                <TooltipTrigger>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">{`Open ${text}`}</span>
+                            {icon}
+                        </Button>
+                    </DropdownMenuTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                    <p>{text}</p>
+                </TooltipContent>
+            </Tooltip>
+            <DropdownMenuContent align="end">
+                <DropdownMenuLabel>{text}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {dropDownMenuItems}
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
 }
 
 
@@ -133,78 +160,78 @@ export const columns: ColumnDef<Legislation>[] = [
                 groupArr?.push(doc)
             })
 
+            const documentMenuItems: JSX.Element = (<>{
+                Array.from(documentGroups.entries()).map(entry => {
+                    return (
+                        <DropdownMenuSub key={`${legislation.biennium}${legislation.billNumber}${entry[0]}`}>
+                            <DropdownMenuSubTrigger>
+                                {entry[0]}
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuPortal>
+                                <DropdownMenuSubContent>
+                                    <ScrollArea classNameViewport="max-h-[200px] max-w-[350px]">
+                                        <DropdownMenuLabel>
+                                            {`${entry[0]} PDFs`}
+                                        </DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        {entry[1]
+                                            ?.sort((a, b) =>
+                                                new Date(b.pdfLastModifiedDate).getTime() - new Date(a.pdfLastModifiedDate).getTime())
+                                            .map(doc => (
+                                                <DropdownMenuItem
+                                                    key={`${legislation.biennium}${legislation.billNumber}${doc.longFriendlyName}`}
+                                                    className="flex items-start"
+                                                >
+                                                    <Link className="text-blue-600" passHref={true} target="_blank" href={doc.pdfUrl} >{`${new Date(doc.pdfLastModifiedDate).toLocaleDateString()}`}</Link>
+                                                    <p>{`${doc.longFriendlyName}`}</p>
+                                                </DropdownMenuItem>)
+                                            )}
+                                    </ScrollArea>
+                                </DropdownMenuSubContent>
+                            </DropdownMenuPortal>
+                        </DropdownMenuSub>
+                    )
+                })
+            }</>)
+
+            const fiscalNotesMenuItems: JSX.Element = (<>{
+                legislation?.fiscalNotes
+                    ?.sort((a, b) =>
+                        new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime())
+                    .map(fiscalNote => {
+                        return (
+
+                            <DropdownMenuItem
+                                key={`${legislation.biennium}${legislation.billNumber}${fiscalNote.packageId}`}
+                                className="flex text-left flex-wrap"
+                            >
+
+                                <Link className="min-w-min text-blue-600" passHref={true} target="_blank" href={fiscalNote.fiscalNotePDFUrl} >
+                                    {new Date(fiscalNote.publishedDate).toLocaleDateString()}
+                                </Link>
+                                <p className="min-w-min">{`${fiscalNote.billType}`}</p>
+                                <p className="min-w-min">{`${fiscalNote.billNumber}`}</p>
+                            </DropdownMenuItem>)
+
+                    })
+            }</>)
+
 
             return (
                 <div>
-                    <DropdownMenu>
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="h-8 w-8 p-0">
-                                        <span className="sr-only">Open documents</span>
-                                        <ScrollText className="h-4 w-4" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Documents</p>
-                            </TooltipContent>
-                        </Tooltip>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Documents</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            {Array.from(documentGroups.entries()).map(entry => {
-                                return (
-                                    <DropdownMenuSub key={`${legislation.biennium}${legislation.billNumber}${entry[0]}`}>
-                                        <DropdownMenuSubTrigger>
-                                            {entry[0]}
-                                        </DropdownMenuSubTrigger>
-                                        <DropdownMenuPortal>
-                                            <DropdownMenuSubContent>
-                                                <ScrollArea classNameViewport="max-h-[200px] max-w-[350px]">
-                                                    <DropdownMenuLabel>
-                                                        {`${entry[0]} PDFs`}
-                                                    </DropdownMenuLabel>
-                                                    <DropdownMenuSeparator />
-                                                    {entry[1].map(doc => (
-                                                        <DropdownMenuItem key={`${legislation.biennium}${legislation.billNumber}${doc.longFriendlyName}`}
-                                                        >
-                                                            <Link className="text-blue-600" passHref={true} target="_blank" href={doc.pdfUrl} >{`${doc.longFriendlyName}`}</Link>
-                                                        </DropdownMenuItem>)
-                                                    )}
-                                                </ScrollArea>
-                                            </DropdownMenuSubContent>
-                                        </DropdownMenuPortal>
-                                    </DropdownMenuSub>
-                                )
-                            })}
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                    <DropdownMenu>
-                        <Tooltip>
-                            <TooltipTrigger>
-                                <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" className="h-8 w-8 p-0">
-                                        <span className="sr-only">Open menu</span>
-                                        <MoreHorizontal className="h-4 w-4" />
-                                    </Button>
-                                </DropdownMenuTrigger>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>Actions</p>
-                            </TooltipContent>
-                        </Tooltip>
-
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                                onClick={() => navigator.clipboard.writeText(legislation.billId)}
-                            >
-                                Copy Legislation ID
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    {(!!legislation?.documents && legislation?.documents?.length > 0) &&
+                        <ActionItem text={'Documents'} dropDownMenuItems={documentMenuItems} icon={<ScrollText className="h-4 w-4" />} />
+                    }
+                    {(!!legislation?.fiscalNotes && legislation?.fiscalNotes.length > 0) &&
+                        <ActionItem text={'Fiscal Notes'} dropDownMenuItems={fiscalNotesMenuItems} icon={<Receipt className="h-4 w-4" />} />
+                    }
+                    <ActionItem text={'Actions'} dropDownMenuItems={
+                        <DropdownMenuItem
+                            onClick={() => navigator.clipboard.writeText(legislation.billId)}
+                        >
+                            Copy Legislation ID
+                        </DropdownMenuItem>
+                    } icon={<MoreHorizontal className="h-4 w-4" />} />
                 </div>
             )
         },

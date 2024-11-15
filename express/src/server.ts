@@ -5,7 +5,7 @@ import xml2js from 'xml2js';
 import dotenv from 'dotenv'
 
 import { asyncWrapper, convertKeysToLowerCase } from "./utils";
-import { LegislativeDocument, LegislativeDocumentReponseData } from "./types";
+import { LegislativeDocument, LegislativeDocumentResponseData, LegislativeFiscalData, LegislativeFiscalDataResponse } from "./types";
 // i love u alot <3
 
 dotenv.config()
@@ -120,19 +120,40 @@ interface FiscalNotesRes {
  * Returns array of fiscal note objects for given query
  */
 app.post('/legislation/fiscal-notes', asyncWrapper(async (req: Request, res: Response) => {
-    const response = await fiscalClient.postForm<FiscalNotesRes>('/fnspublicsearch/dosearch', {
+    const response = await fiscalClient.postForm<LegislativeFiscalDataResponse>('/fnspublicsearch/dosearch', {
         SessionYear: req.body.sessionYear,
         BillNumber: req.body.billNumber,
         BillTitle: req.body.billTitle,
         RequestType: req.body.requestType
     })
-    const data = JSON.stringify(convertKeysToLowerCase(response.data))
+    const raw = response.data.data.map(data => {
+        const cleaned: LegislativeFiscalData = {
+            packageId: data.packageId,
+            sessionYear: data.SessionYear,
+            proposedFlag: data.ProposedFlag,
+            billId: data.BillId == null ? undefined : Number(data.BillId),
+            billNumber: data.BillNumber,
+            billTitle: data.BillTitle,
+            publishedDate: new Date(Number(data.PublishedDate.slice(6, data.PublishedDate.length - 2))),
+            billType: data.BillType,
+            requestType: data.RequestType,
+            amendmentName: data.AmendmentName,
+            engrossedNotation: data.EngrossedNotation,
+            sustituteNotation: data.SustituteNotation,
+            qualifier: data.Qualifier,
+            origin: data.Origin,
+            fiscalNotePDFUrl: `https://fnspublic.ofm.wa.gov/FNSPublicSearch/GetPDF/${data.packageId}`
+        }
 
-    res.send(data);
+        return cleaned
+    })
+
+
+    res.send(JSON.stringify(raw));
 }))
 
 app.post('/legislation/documents', asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
-    const response = await legislationClient.post<LegislativeDocumentReponseData>('/LegislativeDocumentService.asmx/GetDocuments', {
+    const response = await legislationClient.post<LegislativeDocumentResponseData>('/LegislativeDocumentService.asmx/GetDocuments', {
         biennium: req.body.biennium,
         namedLike: req.body.namedLike
     }, { headers: { 'content-type': 'application/x-www-form-urlencoded' } })
@@ -140,7 +161,7 @@ app.post('/legislation/documents', asyncWrapper(async (req: Request, res: Respon
 
 
 
-    xml2js.parseString(response.data, (err, results: LegislativeDocumentReponseData) => {
+    xml2js.parseString(response.data, (err, results: LegislativeDocumentResponseData) => {
         if (err) next(err)
 
         const documents: Array<LegislativeDocument> = results.ArrayOfLegislativeDocument.LegislativeDocument.map(raw => {

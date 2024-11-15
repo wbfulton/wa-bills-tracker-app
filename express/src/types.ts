@@ -1,4 +1,4 @@
-export interface LegislativeDocumentReponseData {
+export interface LegislativeDocumentResponseData {
     ArrayOfLegislativeDocument: ArrayOfLegislativeDocument
 }
 
@@ -45,4 +45,43 @@ export interface LegislativeDocument {
     pdfCreateDate: string
     pdfLastModifiedDate: string
     billId: number
+}
+
+export interface LegislativeFiscalDataResponse {
+    data: LegislativeFiscalDataRaw[]
+}
+
+export interface LegislativeFiscalDataRaw {
+    packageId: number
+    SessionYear: string
+    ProposedFlag: string
+    BillId: any
+    BillNumber: string
+    BillTitle: string
+    PublishedDate: string
+    BillType: string
+    RequestType: string
+    AmendmentName: string
+    EngrossedNotation: string
+    SustituteNotation: string
+    Qualifier: string
+    Origin: string
+}
+
+export interface LegislativeFiscalData {
+    packageId: number
+    sessionYear: string
+    proposedFlag: string
+    billId?: number
+    billNumber: string
+    billTitle: string
+    publishedDate: Date
+    billType: string
+    requestType: string
+    amendmentName: string
+    engrossedNotation: string
+    sustituteNotation: string
+    qualifier: string
+    origin: string
+    fiscalNotePDFUrl: string
 }

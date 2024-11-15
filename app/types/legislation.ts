@@ -1,4 +1,5 @@
 import { LegislativeDocument } from "app/api/types/legislationDocuments"
+import { LegislativeFiscalData } from "express/src/types"
 
 /**
 * Prefix and bill number of a piece of legislation.  When paired with the biennium, it is a unique * reference to legislation.  This field is commonly used for display purposes on legislative reports.
@@ -34,6 +35,30 @@ export enum Biennium {
     "1995-96" = "1995-96",
     "1993-94" = "1993-94",
     "1991-92" = "1991-92",
+}
+
+/**
+ * Two year time period beginning on odd years.  Legislation introduced during this time period can be considered in any sessions scheduled within the time period.  Information is only available from 1991-current.
+ * @example "1991-92"
+ */
+export enum BienniumToLegislativeYear {
+    "2023-24" = "68",
+    "2021-22" = "67",
+    "2019-20" = "66",
+    "2017-18" = "65",
+    "2015-16" = "64",
+    "2013-14" = "63",
+    "2011-12" = "62",
+    "2009-10" = "61",
+    "2007-08" = "60",
+    "2005-06" = "59",
+    "2003-04" = "58",
+    "2001-02" = "57",
+    "1999-00" = "56",
+    "1997-98" = "55",
+    "1995-96" = "54",
+    "1993-94" = "53",
+    "1991-92" = "52",
 }
 
 /**
@@ -236,4 +261,8 @@ export interface Legislation {
      * Array of relevant documents based on biennium and text query from bill number
      */
     documents?: Array<LegislativeDocument>
+    /**
+     * Array of relevant fiscal notes 
+     */
+    fiscalNotes?: Array<LegislativeFiscalData>
 }

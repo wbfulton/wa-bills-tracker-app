@@ -1,14 +1,10 @@
-import { getLegislationPassedLegislature } from "app/api/soap/getLegislationPassedLegislature";
+import { LegislationDetailed } from "app/api/types/legislationDetailed";
 import { LegislationInfo } from "app/api/types/legislationPassedLegislature";
 import { BehaviorSubject } from "rxjs";
-import { LegislationFilters } from "./filters-store";
-import { BillNumber, Legislation } from "app/api/types/legislationDetailed";
-import { getLegislationDetails } from "app/api/soap/getLegislationDetails";
-import { getLegislationFiscalNoteUrl } from "app/api/soap/getLegislationFiscalNoteUrl";
 
 export const legislationPassedLegislature$ = new BehaviorSubject<Array<LegislationInfo>>([])
 
-export const legislationDetails$ = new BehaviorSubject<Map<BillNumber, Legislation>>(new Map())
+export const legislationDetails$ = new BehaviorSubject<Map<number, LegislationDetailed>>(new Map())
 
 export interface BillDocuments {
     fullTextUrl?: string;
@@ -16,44 +12,44 @@ export interface BillDocuments {
 }
 
 // WILL HAVE CONFLICT WITH JUST BILL NUMBER
-export const legislationDocuments$ = new BehaviorSubject<Map<BillNumber, BillDocuments>>(new Map())
+export const legislationDocuments$ = new BehaviorSubject<Map<number, BillDocuments>>(new Map())
 
 
 
-export const updateLegislationPassedLegislature = async (filters: LegislationFilters) => {
-    try {
-        const data = await getLegislationPassedLegislature(filters.biennium)
-        const legis = data.arrayOfLegislationInfo.legislationInfo
+// export const updateLegislationPassedLegislature = async (filters: LegislationFilters) => {
+//     try {
+//         const data = await getLegislationPassedLegislature(filters.biennium)
+//         const legis = data.arrayOfLegislationInfo.legislationInfo
 
-        legislationPassedLegislature$.next(legis)
-    } catch (error) {
-        console.log(error)
-    }
-}
+//         legislationPassedLegislature$.next(legis)
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 
-export const updateLegislationDetails = async (filters: LegislationFilters, billNumbers: Array<BillNumber>) => {
-    try {
-        const newDetails = legislationDetails$.getValue();
-        const newDocumentUrls = legislationDocuments$.getValue();
-
-
-        await Promise.all(billNumbers.map(async (num) => {
-            const details = await getLegislationDetails(filters.biennium, num)
-            const detailedBill = details?.arrayOfLegislation?.legislation[0]
-            newDetails.set(num, detailedBill)
-
-            const fiscalNoteUrl = await getLegislationFiscalNoteUrl(detailedBill);
-            newDocumentUrls.set(Number(detailedBill.billNumber[0]), { fiscalNoteUrl })
-
-        }))
+// export const updateLegislationDetails = async (filters: LegislationFilters, billNumbers: Array<BillNumber>) => {
+//     try {
+//         const newDetails = legislationDetails$.getValue();
+//         const newDocumentUrls = legislationDocuments$.getValue();
 
 
-        legislationDetails$.next(newDetails)
-        legislationDocuments$.next(newDocumentUrls)
+//         await Promise.all(billNumbers.map(async (num) => {
+//             const details = await getLegislationDetails(filters.biennium, num)
+//             const detailedBill = details?.arrayOfLegislation?.legislation[0]
+//             newDetails.set(num, detailedBill)
 
-    } catch (error) {
-        console.log(error)
-    }
-}
+//             const fiscalNoteUrl = await getLegislationFiscalNoteUrl(detailedBill);
+//             newDocumentUrls.set(Number(detailedBill.billNumber[0]), { fiscalNoteUrl })
+
+//         }))
+
+
+//         legislationDetails$.next(newDetails)
+//         legislationDocuments$.next(newDocumentUrls)
+
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 
 

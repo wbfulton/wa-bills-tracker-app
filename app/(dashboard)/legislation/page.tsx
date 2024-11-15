@@ -8,6 +8,7 @@ import { Agency, Biennium, CompanionLegislation, Legislation, LegislationCurrent
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";
+import { getLegislationFiscalNotes } from "app/api/soap/getLegislationFiscalNotes";
 
 
 // call apis in this, or other pages
@@ -18,11 +19,18 @@ async function getData(biennium: Biennium): Promise<Legislation[]> {
 
 
 
-        const arr = await Promise.all(legInfo.map(async (info) => {
 
+
+        const arr = await Promise.all(legInfo.map(async (info) => {
             const detail = (await getLegislationDetails(biennium, Number(info.billNumber[0])))?.arrayOfLegislation?.legislation?.[0];
 
             const documents = await getLegislationDocuments({ biennium, text: info.billNumber[0] })
+
+            const fiscalNotes = await getLegislationFiscalNotes({
+                biennium,
+                billNumber: Number(info.billNumber[0]),
+                billTitle: detail.shortDescription[0]
+            })
 
 
             if (!detail) throw new Error()
@@ -82,7 +90,8 @@ async function getData(biennium: Biennium): Promise<Legislation[]> {
                 legalTitle: detail.legalTitle[0],
                 currentStatus,
                 companion,
-                documents
+                documents,
+                fiscalNotes
             }
 
             return leg
