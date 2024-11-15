@@ -20,10 +20,17 @@ export default function LoginPage() {
         </CardHeader>
         <CardFooter>
           <form
-            action={() => {
-              signIn("github", {
-                redirectTo: "/",
-              }).catch((err) => console.log(err));
+            // eslint-disable-next-line @typescript-eslint/no-misused-promises
+            action={async () => {
+              "use server";
+              // .catch((err) => console.log(err));
+              try {
+                await signIn("github", {
+                  redirectTo: "/",
+                });
+              } catch (error) {
+                console.log(error);
+              }
             }}
             className="w-full"
           >

@@ -1,4 +1,3 @@
-import { LegislationDetailed } from "app/api/types/legislationDetailed";
 import { Legislation } from "app/types/legislation";
 import { BehaviorSubject } from "rxjs";
 
@@ -6,9 +5,10 @@ export const legislationPassedLegislature$ = new BehaviorSubject<
   Array<Legislation>
 >([]);
 
-export const legislationDetails$ = new BehaviorSubject<
-  Map<number, LegislationDetailed>
->(new Map());
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const legislationDetails$ = new BehaviorSubject<Map<number, any>>(
+  new Map()
+);
 
 export interface BillDocuments {
   fullTextUrl?: string;
