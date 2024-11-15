@@ -85,3 +85,48 @@ export interface LegislativeFiscalData {
     origin: string
     fiscalNotePDFUrl: string
 }
+
+export interface LegislationInfoResponseData {
+    ArrayOfLegislationInfo: ArrayOfLegislationInfo
+}
+
+export interface ArrayOfLegislationInfo {
+    $: GeneratedType
+    LegislationInfo: LegislationInfoRaw[]
+}
+
+export interface GeneratedType {
+    "xmlns:xsd": string
+    "xmlns:xsi": string
+    xmlns: string
+}
+
+export interface LegislationInfoRaw {
+    Biennium: string[]
+    BillId: string[]
+    BillNumber: string[]
+    SubstituteVersion: string[]
+    EngrossedVersion: string[]
+    ShortLegislationType: ShortLegislationTypeRaw[]
+    OriginalAgency: string[]
+    Active: string[]
+    DisplayNumber: string[]
+}
+
+export interface ShortLegislationTypeRaw {
+    ShortLegislationType: string[]
+    LongLegislationType: string[]
+}
+
+export interface LegislationInfo {
+    biennium: string
+    billId: string
+    billNumber: number
+    substituteVersion: number
+    engrossedVersion: number
+    shortLegislationType: string
+    longLegislationType: string
+    originalAgency: string
+    active: boolean
+    displayNumber: number
+}

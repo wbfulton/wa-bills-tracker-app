@@ -5,7 +5,7 @@ import xml2js from 'xml2js';
 import dotenv from 'dotenv'
 
 import { asyncWrapper, convertKeysToLowerCase } from "./utils";
-import { LegislativeDocument, LegislativeDocumentResponseData, LegislativeFiscalData, LegislativeFiscalDataResponse } from "./types";
+import { LegislationInfo, LegislationInfoRaw, LegislationInfoResponseData, LegislativeDocument, LegislativeDocumentResponseData, LegislativeFiscalData, LegislativeFiscalDataResponse } from "./types";
 // i love u alot <3
 
 dotenv.config()
@@ -95,25 +95,6 @@ app.get('/legislation/fiscal-note/:packageID', asyncWrapper(async (req: Request,
     res.status(200).send(response.data);
 
 }))
-
-interface FiscalNotesRes {
-    data: Array<{
-        AmendmentName: string
-        BillId: null,
-        BillNumber: string,
-        BillTitle: string,
-        BillType: string,
-        EngrossedNotation: string,
-        Origin: string,
-        ProposedFlag: string,
-        PublishedDate: Date,
-        Qualifier: string,
-        RequestType: string,
-        SessionYear: string,
-        SustituteNotation: string,
-        packageId: number
-    }>
-}
 
 
 /**
@@ -224,12 +205,31 @@ app.get('/passed-legislature/:biennium', asyncWrapper(async (req: Request, res: 
         },
     })
 
-    xml2js.parseString(response.data, (err, results) => {
+
+    xml2js.parseString(response.data, (err, parsedResponse: LegislationInfoResponseData) => {
         if (err) next(err);
 
-        const data = JSON.stringify(convertKeysToLowerCase(results))
 
-        res.send(data);
+        const results: Array<LegislationInfoRaw> = parsedResponse.ArrayOfLegislationInfo.LegislationInfo
+
+        const data = results.map(info => {
+            const clean: LegislationInfo = {
+                biennium: info.Biennium[0],
+                billId: info.BillId[0],
+                billNumber: Number(info.BillNumber[0]),
+                substituteVersion: Number(info.SubstituteVersion[0]),
+                engrossedVersion: Number(info.EngrossedVersion[0]),
+                shortLegislationType: info.ShortLegislationType[0].ShortLegislationType[0],
+                longLegislationType: info.ShortLegislationType[0].LongLegislationType[0],
+                originalAgency: info.OriginalAgency[0],
+                active: Boolean(info.Active[0]),
+                displayNumber: Number(info.DisplayNumber[0]),
+            }
+
+            return clean;
+        })
+
+        res.send(JSON.stringify(data));
     });
 }))
 

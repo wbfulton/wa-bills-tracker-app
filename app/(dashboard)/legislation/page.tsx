@@ -15,20 +15,17 @@ import { getLegislationFiscalNotes } from "app/api/soap/getLegislationFiscalNote
 async function getData(biennium: Biennium): Promise<Legislation[]> {
     try {
         // Fetch data from your API here.
-        const legInfo = (await getLegislationPassedLegislature(biennium)).arrayOfLegislationInfo.legislationInfo
-
-
-
+        const legInfo = (await getLegislationPassedLegislature(biennium))
 
 
         const arr = await Promise.all(legInfo.map(async (info) => {
-            const detail = (await getLegislationDetails(biennium, Number(info.billNumber[0])))?.arrayOfLegislation?.legislation?.[0];
+            const detail = (await getLegislationDetails(biennium, info.billNumber))?.arrayOfLegislation?.legislation?.[0];
 
-            const documents = await getLegislationDocuments({ biennium, text: info.billNumber[0] })
+            const documents = await getLegislationDocuments({ biennium, text: String(info.billNumber) })
 
             const fiscalNotes = await getLegislationFiscalNotes({
                 biennium,
-                billNumber: Number(info.billNumber[0]),
+                billNumber: info.billNumber,
                 billTitle: detail.shortDescription[0]
             })
 
@@ -64,15 +61,15 @@ async function getData(biennium: Biennium): Promise<Legislation[]> {
             }
 
             const leg: Legislation = {
-                biennium: info.biennium[0],
-                billId: info.billId[0],
-                billNumber: Number(info.billNumber[0]),
-                substituteVersion: Number(info.substituteVersion[0]),
-                engrossedVersion: Number(info.engrossedVersion[0]),
-                shortLegislationType: info.shortLegislationType[0].shortLegislationType[0] as ShortLegislationType,
-                longLegislationType: info.shortLegislationType[0].longLegislationType[0] as LongLegislationType,
-                originalAgency: info.originalAgency[0] as Agency,
-                active: Boolean(info.active[0]),
+                biennium: info.biennium as Biennium,
+                billId: info.billId,
+                billNumber: info.billNumber,
+                substituteVersion: info.substituteVersion,
+                engrossedVersion: info.engrossedVersion,
+                shortLegislationType: info.shortLegislationType as ShortLegislationType,
+                longLegislationType: info.shortLegislationType as LongLegislationType,
+                originalAgency: info.originalAgency as Agency,
+                active: info.active,
                 stateFiscalNote: Boolean(detail.stateFiscalNote[0]),
                 localFiscalNote: Boolean(detail.localFiscalNote[0]),
                 appropriations: Boolean(detail.appropriations[0]),
