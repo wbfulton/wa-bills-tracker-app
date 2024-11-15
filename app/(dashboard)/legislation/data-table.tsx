@@ -3,19 +3,21 @@
 import {
     ColumnDef,
     ColumnFiltersState,
+    FilterFn,
     GlobalFilterTableState,
+    PaginationState,
+    Row,
     SortingState,
     flexRender,
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
     getSortedRowModel,
-    useReactTable,
-    FilterFn,
-
-    Row,
+    useReactTable
 } from "@tanstack/react-table"
 
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
     Table,
     TableBody,
@@ -24,21 +26,18 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { memo, useEffect, useMemo, useState } from "react"
+import { memo, useEffect, useState } from "react"
 
-import { rankItem } from '@tanstack/match-sorter-utils';
-import { fuzzySort } from "./columns"
-import { Skeleton } from "@/components/ui/Skeleton"
+import { Spinner } from "@/components/icons"
 import { InfoPopoverButton } from "@/components/ui/InfoPopoverButton"
+import { Label } from "@/components/ui/Label"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/Selector"
+import { Skeleton } from "@/components/ui/Skeleton"
+import { rankItem } from '@tanstack/match-sorter-utils'
 import { useLegislationFilters } from "app/hooks/useFilters"
 import { updateLegislationFilters } from "app/store/filters-store"
 import { Biennium } from "app/types/legislation"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/Selector";
-import { Label } from "@/components/ui/Label";
-import { cn } from "@/lib/utils"
-import { Spinner } from "@/components/icons"
+import { fuzzySort } from "./columns"
 
 const BienniumSelector = memo(({ disabled, onChange }: { disabled?: boolean, onChange?: (biennium: Biennium) => void }) => {
     const filters = useLegislationFilters();
@@ -101,6 +100,11 @@ export function DataTable<TData, TValue>({
         []
     )
     const [globalFilter, setGlobalFilter] = useState<GlobalFilterTableState>()
+    const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10
+    })
+
 
 
     const table = useReactTable({
@@ -115,6 +119,7 @@ export function DataTable<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         onGlobalFilterChange: setGlobalFilter,
+        onPaginationChange: setPagination,
         getFilteredRowModel: getFilteredRowModel(),
         globalFilterFn: fuzzyFilter,
         sortingFns: {
@@ -124,6 +129,7 @@ export function DataTable<TData, TValue>({
             sorting,
             columnFilters,
             globalFilter,
+            pagination
         },
 
     })
@@ -132,6 +138,11 @@ export function DataTable<TData, TValue>({
         table.getColumn('billId')?.toggleSorting(false, true)
     }, [])
     // i still love u <3
+
+    const firstRowIndex = table.getRowCount() === 0 ? 0 : 1 + table.getState().pagination.pageIndex * table.getState().pagination.pageSize
+
+    const lastRowIndex = Math.min(table.getState().pagination.pageIndex * table.getState().pagination.pageSize + table.getState().pagination.pageSize, table.getRowCount())
+
     return (
         <div>
             <div className="flex items-end py-4">
@@ -215,6 +226,13 @@ export function DataTable<TData, TValue>({
                         </Table>
                     </div>
                     <div className="flex items-center justify-end space-x-2 py-4">
+                        <div className="text-xs text-muted-foreground">
+                            Showing{' '}
+                            <strong>
+                                {firstRowIndex}-{lastRowIndex}
+                            </strong>{' '}
+                            of <strong>{table.getRowCount()}</strong> bills
+                        </div>
                         <Button
                             variant="outline"
                             size="sm"
@@ -231,10 +249,10 @@ export function DataTable<TData, TValue>({
                         >
                             Next
                         </Button>
-                    </div>
+                    </div >
                 </>
             }
-        </div>
+        </div >
 
     )
 }
