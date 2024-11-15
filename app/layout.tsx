@@ -3,7 +3,7 @@ import './globals.css';
 import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
-  title: 'Next.js App Router + NextAuth + Tailwind CSS',
+  title: 'WA State Gov Tracker',
   description:
     'A user admin dashboard configured with Next.js, NextAuth, Tailwind CSS, TypeScript, and Prettier.'
 };

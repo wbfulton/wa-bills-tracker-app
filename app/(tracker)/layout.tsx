@@ -1,9 +1,9 @@
 import { Analytics } from '@vercel/analytics/react';
-import { DesktopSideNavbar } from 'app/(dashboard)/layout/DesktopSideNavbar';
+import { DesktopSideNavbar } from 'app/(tracker)/layout/DesktopSideNavbar';
 import Providers from './providers';
 import { SearchInput } from './search';
 import { User } from './user';
-import { MobileSideNavbar } from 'app/(dashboard)/layout/MobileSideNavbar';
+import { MobileSideNavbar } from 'app/(tracker)/layout/MobileSideNavbar';
 import { DashboardBreadcrumb } from './layout/DashboardBreadcrumb';
 
 export default function DashboardLayout({

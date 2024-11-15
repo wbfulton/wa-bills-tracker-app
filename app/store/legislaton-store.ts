@@ -1,8 +1,8 @@
 import { LegislationDetailed } from "app/api/types/legislationDetailed";
-import { LegislationInfo } from "app/api/types/legislationPassedLegislature";
+import { Legislation } from "app/types/legislation";
 import { BehaviorSubject } from "rxjs";
 
-export const legislationPassedLegislature$ = new BehaviorSubject<Array<LegislationInfo>>([])
+export const legislationPassedLegislature$ = new BehaviorSubject<Array<Legislation>>([])
 
 export const legislationDetails$ = new BehaviorSubject<Map<number, LegislationDetailed>>(new Map())
 

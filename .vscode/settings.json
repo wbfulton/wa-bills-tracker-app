@@ -2,5 +2,8 @@
   "typescript.tsdk": "node_modules/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
   "editor.wordWrap": "wordWrapColumn",
-  "editor.wordWrapColumn": 110
+  "editor.wordWrapColumn": 110,
+  "editor.codeActionsOnSave": {
+    "source.removeUnusedImports": "explicit"
+  }
 }

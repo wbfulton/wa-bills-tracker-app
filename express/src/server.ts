@@ -4,7 +4,7 @@ import xmlparser from 'express-xml-bodyparser';
 import xml2js from 'xml2js';
 import dotenv from 'dotenv'
 
-import { asyncWrapper, convertKeysToLowerCase } from "./utils";
+import { asyncWrapper } from "./utils";
 import { CompanionLegislation, CurrentStatus, LegislationDetail, LegislationDetailRaw, LegislationDetailResponseData, LegislationInfo, LegislationInfoRaw, LegislationInfoResponseData, LegislativeDocument, LegislativeDocumentResponseData, LegislativeFiscalData, LegislativeFiscalDataResponse } from "./types";
 // i love u alot <3
 

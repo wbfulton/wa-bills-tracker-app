@@ -1,7 +1,7 @@
 'use client'
 
-import { LegislationInfo } from "app/api/types/legislationPassedLegislature";
 import { legislationPassedLegislature$ } from "app/store/legislaton-store";
+import { Legislation } from "app/types/legislation";
 import { useState, useEffect } from "react";
 
 
@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
  * @returns Array of passed legislation
  */
 export const useLegislationPassedLegislature = () => {
-    const [leg, setLeg] = useState<Array<LegislationInfo>>([]);
+    const [leg, setLeg] = useState<Array<Legislation>>([]);
 
     useEffect(() => {
         const sub = legislationPassedLegislature$.subscribe(val => {

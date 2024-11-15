@@ -1,16 +1,14 @@
-export interface LegislativeDocumentResponseData {
-    ArrayOfLegislativeDocument: ArrayOfLegislativeDocument
-}
-
-export interface ArrayOfLegislativeDocument {
-    $: GeneratedType
-    LegislativeDocument: LegislativeDocumentRaw[]
-}
-
-export interface GeneratedType {
+interface GeneratedType {
     "xmlns:xsd": string
     "xmlns:xsi": string
     xmlns: string
+}
+
+export interface LegislativeDocumentResponseData {
+    ArrayOfLegislativeDocument: {
+        $: GeneratedType
+        LegislativeDocument: LegislativeDocumentRaw[]
+    }
 }
 
 export interface LegislativeDocumentRaw {
@@ -87,19 +85,13 @@ export interface LegislativeFiscalData {
 }
 
 export interface LegislationInfoResponseData {
-    ArrayOfLegislationInfo: ArrayOfLegislationInfo
+    ArrayOfLegislationInfo: {
+        $: GeneratedType
+        LegislationInfo: LegislationInfoRaw[]
+    }
 }
 
-export interface ArrayOfLegislationInfo {
-    $: GeneratedType
-    LegislationInfo: LegislationInfoRaw[]
-}
 
-export interface GeneratedType {
-    "xmlns:xsd": string
-    "xmlns:xsi": string
-    xmlns: string
-}
 
 export interface LegislationInfoRaw {
     Biennium: string[]
@@ -107,15 +99,13 @@ export interface LegislationInfoRaw {
     BillNumber: string[]
     SubstituteVersion: string[]
     EngrossedVersion: string[]
-    ShortLegislationType: ShortLegislationTypeRaw[]
+    ShortLegislationType: Array<{
+        ShortLegislationType: string[]
+        LongLegislationType: string[]
+    }>
     OriginalAgency: string[]
     Active: string[]
     DisplayNumber: string[]
-}
-
-export interface ShortLegislationTypeRaw {
-    ShortLegislationType: string[]
-    LongLegislationType: string[]
 }
 
 export interface LegislationInfo {
@@ -132,12 +122,10 @@ export interface LegislationInfo {
 }
 
 export interface LegislationDetailResponseData {
-    ArrayOfLegislation: ArrayOfLegislation
-}
-
-export interface ArrayOfLegislation {
-    $: GeneratedType
-    Legislation: LegislationDetailRaw[]
+    ArrayOfLegislation: {
+        $: GeneratedType
+        Legislation: LegislationDetailRaw[]
+    }
 }
 
 
@@ -148,7 +136,10 @@ export interface LegislationDetailRaw {
     BillNumber: string[]
     SubstituteVersion: string[]
     EngrossedVersion: string[]
-    ShortLegislationType: ShortLegislationType[]
+    ShortLegislationType: Array<{
+        ShortLegislationType: string[]
+        LongLegislationType: string[]
+    }>
     OriginalAgency: string[]
     Active: string[]
     StateFiscalNote: string[]
@@ -161,38 +152,27 @@ export interface LegislationDetailRaw {
     ShortDescription: string[]
     Request: string[]
     IntroducedDate: string[]
-    CurrentStatus: CurrentStatusRaw[]
+    CurrentStatus: Array<{
+        BillId: string[]
+        HistoryLine: string[]
+        ActionDate: string[]
+        AmendedByOppositeBody: string[]
+        PartialVeto: string[]
+        Veto: string[]
+        AmendmentsExist: string[]
+        Status: string[]
+    }>
     Sponsor: string[]
     PrimeSponsorID: string[]
     LongDescription: string[]
     LegalTitle: string[]
-    Companions?: CompanionRaw[]
-}
-
-export interface ShortLegislationType {
-    ShortLegislationType: string[]
-    LongLegislationType: string[]
-}
-
-export interface CurrentStatusRaw {
-    BillId: string[]
-    HistoryLine: string[]
-    ActionDate: string[]
-    AmendedByOppositeBody: string[]
-    PartialVeto: string[]
-    Veto: string[]
-    AmendmentsExist: string[]
-    Status: string[]
-}
-
-export interface CompanionRaw {
-    Companion: Companion2Raw[]
-}
-
-export interface Companion2Raw {
-    Biennium: string[]
-    BillId: string[]
-    Status: string[]
+    Companions?: Array<{
+        Companion: Array<{
+            Biennium: string[]
+            BillId: string[]
+            Status: string[]
+        }>
+    }>
 }
 
 export interface LegislationDetail {

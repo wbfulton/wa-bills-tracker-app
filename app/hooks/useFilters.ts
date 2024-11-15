@@ -1,4 +1,3 @@
-import { LegislationInfo } from "app/api/types/legislationPassedLegislature";
 import { DEFAULT_FILTERS, LegislationFilters } from "app/store/filters-store";
 import { legislationFilters$ } from "app/store/filters-store";
 import { useState, useEffect } from "react";
