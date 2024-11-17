@@ -413,10 +413,7 @@ app.get(
     );
 
     const strToRemove = "\n";
-    const starStr = "*";
     const regex = new RegExp(strToRemove, "g");
-    const regexStar = new RegExp(starStr, "g");
-
     const parsedHtml = cheerio.load(response.data);
     const items = parsedHtml("li")
       .nextAll()
@@ -426,9 +423,7 @@ app.get(
         const splits = str.split(":");
         return {
           legislationSummary: splits[0],
-          billIds: splits[1]
-            .split(",")
-            .map((str) => str.replace(regexStar, "")),
+          billIds: splits[1].split(",").map((str) => str.replace("*", "")),
         };
       });
 

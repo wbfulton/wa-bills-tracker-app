@@ -16,7 +16,7 @@ export const DesktopSideNavbar = () => {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
       <nav className="flex flex-col items-center gap-4 px-2 sm:py-5">
-        <NavItem href="/" label="Wa Bill Tracker">
+        <NavItem href="/vercel" label="Wa Bill Tracker">
           <VercelLogo className="h-3 w-3 transition-all group-hover:scale-110" />
         </NavItem>
 
@@ -28,15 +28,15 @@ export const DesktopSideNavbar = () => {
           <Landmark className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/" label="Laws">
+        <NavItem href="/laws" label="Laws">
           <Scale className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/" label="Politicians">
+        <NavItem href="/politicians" label="Politicians">
           <Users2 className="h-5 w-5" />
         </NavItem>
 
-        <NavItem href="/" label="Political Donations">
+        <NavItem href="/donations" label="Political Donations">
           <CircleDollarSign className="h-5 w-5" />
         </NavItem>
       </nav>
