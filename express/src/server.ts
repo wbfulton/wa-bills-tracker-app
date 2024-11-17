@@ -2,8 +2,10 @@ import axios, { AxiosRequestConfig } from "axios";
 import dotenv from "dotenv";
 import express, { Express, NextFunction, Request, Response } from "express";
 import xmlparser from "express-xml-bodyparser";
+import queryString from "querystring";
 import xml2js from "xml2js";
 
+import * as cheerio from "cheerio";
 import {
   CompanionLegislation,
   CurrentStatus,
@@ -17,8 +19,12 @@ import {
   LegislativeDocumentResponseData,
   LegislativeFiscalData,
   LegislativeFiscalDataResponse,
+  RcwCiteAffected,
+  RcwCiteAffectedRaw,
+  RcwCiteAffectedResponse,
 } from "./types";
 import { asyncWrapper } from "./utils";
+
 // i love u alot <3
 
 dotenv.config();
@@ -52,6 +58,10 @@ const fiscalClient = axios.create({
 
 const legislationClient = axios.create({
   baseURL: "https://wslwebservices.leg.wa.gov",
+});
+
+const scrapperClient = axios.create({
+  baseURL: "https://app.leg.wa.gov",
 });
 
 /**
@@ -338,6 +348,183 @@ app.get(
           };
 
           return clean;
+        });
+
+        res.send(JSON.stringify(data));
+      }
+    );
+  })
+);
+
+// GET TOPICS FOR A BILL
+// https://app.leg.wa.gov/bi/report/topicalindex/?biennium=2023-24&legId=130637
+
+// GET BILLS FOR A TOPIC
+// https://app.leg.wa.gov/bi/report/topicalindex/?biennium=2023-24&topicId=15726
+
+//
+app.get(
+  "/legislation/topic-search/:biennium/:topicId",
+  asyncWrapper(async (req: Request, res: Response) => {
+    const data = {
+      renderType: 0,
+      biennium: req.params.biennium,
+      reportType: 0,
+      houseSponsorId: 0,
+      senateSponsorId: 0,
+      sponsorAgency: null,
+      committeeSponsorId: 0,
+      requesterSponsorId: 0,
+      billsBySponsorReportType: null,
+      hasCompanionBills: false,
+      customReportViewId: 0,
+      startBillNumber: null,
+      endBillNumber: null,
+      allBills: false,
+      listIds: null,
+      showAddBillsModal: false,
+      selectedBillTrackingAction: null,
+      listId: null,
+      legId: 0,
+      topicId: req.params.topicId,
+      topic: null,
+      topicStartsWith: null,
+      topicStartsWithNumber: false,
+      topicalIndexRSS: false,
+      citation: null,
+      committeeId: 0,
+      billsInAndOutOfCommitteeReportType: null,
+      dynamic: false,
+      selectedStepAction: null,
+      selectedStepBillAgency: null,
+      chamber: null,
+      sortOrder: null,
+      paperHangingReportType: null,
+      date: null,
+      time: null,
+    };
+
+    const query = queryString.stringify(data);
+    console.log(query);
+
+    const response = await scrapperClient.post(
+      "bi/report/_topicalIndex/",
+      query
+    );
+
+    const strToRemove = "\n";
+    const starStr = "*";
+    const regex = new RegExp(strToRemove, "g");
+    const regexStar = new RegExp(starStr, "g");
+
+    const parsedHtml = cheerio.load(response.data);
+    const items = parsedHtml("li")
+      .nextAll()
+      .map((index, element) => parsedHtml(element).text().replace(regex, ""))
+      .get()
+      .map((str: string) => {
+        const splits = str.split(":");
+        return {
+          legislationSummary: splits[0],
+          billIds: splits[1]
+            .split(",")
+            .map((str) => str.replace(regexStar, "")),
+        };
+      });
+
+    const rawTopicTitle = parsedHtml("h3").after("li.mb-3").first().text();
+
+    const topicTitle = rawTopicTitle.replace(regex, "");
+
+    res.send(JSON.stringify({ topicTitle, legislation: items }));
+  })
+);
+
+// GET BILLS BY ANYTHING
+// https://app.leg.wa.gov/bi/report/topicalindex/ POST FORM
+// renderType: 0
+// biennium: 2023-24
+// reportType: 0
+// houseSponsorId: 0
+// senateSponsorId: 0
+// sponsorAgency:
+// committeeSponsorId: 0
+// requesterSponsorId: 0
+// billsBySponsorReportType:
+// hasCompanionBills: false
+// customReportViewId: 0
+// startBillNumber:
+// endBillNumber:
+// allBills: false
+// listIds:
+// showAddBillsModal: false
+// selectedBillTrackingAction:
+// listId:
+// legId: 0
+// topicId: 15503
+// topic:
+// topicStartsWith:
+// topicStartsWithNumber: false
+// topicalIndexRSS: false
+// citation:
+// committeeId: 0
+// billsInAndOutOfCommitteeReportType:
+// dynamic: false
+// selectedStepAction:
+// selectedStepBillAgency:
+// chamber:
+// sortOrder:
+// paperHangingReportType:
+// date:
+// time:
+
+// COMMENT ON BILL
+// https://app.leg.wa.gov/pbc/bill/2238
+
+// GET EMAIL UPDATES
+// https://public.govdelivery.com//accounts/WALEGBILLS/subscriber/new?topic_id=HB1180-2023-24
+
+// TEXT SEARCH BILLS
+// https://search.leg.wa.gov/search.aspx#document
+
+/**
+ * RCW Cite
+ * Reference to a title, chapter, or section of the Revised Code of Washington.
+ * Examples:  RCW 18, RCW 23B.06.010
+ *
+ * https://app.leg.wa.gov/bi/report/topicalindex/?biennium=2023-24&topic=FIREARMS
+ */
+app.get(
+  "/rcw/cites-affected/:biennium/:billId",
+  asyncWrapper(async (req: Request, res: Response, next: NextFunction) => {
+    const response = await legislationClient.get(
+      "/LegislationService.asmx/GetRcwCitesAffected",
+      {
+        headers: {
+          Host: "wslwebservices.leg.wa.gov",
+        },
+        params: {
+          biennium: req.params.biennium,
+          billId: req.params.billId,
+        },
+      }
+    );
+
+    xml2js.parseString(
+      response.data,
+      (err, parsedResponse: RcwCiteAffectedResponse) => {
+        if (err) next(err);
+
+        const results: Array<RcwCiteAffectedRaw> =
+          parsedResponse.ArrayOfRcwCiteAffected.RcwCiteAffected;
+
+        const data = results.map((citeData) => {
+          const cite: RcwCiteAffected = {
+            rcwCite: citeData.RcwCite[0],
+            action: citeData.Action[0],
+          };
+
+          return cite;
         });
 
         res.send(JSON.stringify(data));

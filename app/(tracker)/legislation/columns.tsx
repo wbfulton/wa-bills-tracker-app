@@ -77,6 +77,7 @@ export const columns: ColumnDef<Legislation>[] = [
   {
     id: "billId",
     accessorKey: "billId",
+    filterFn: "arrIncludesSome",
     header: ({ column }) => {
       const isSortedAsc = column.getIsSorted() === "asc";
       return (

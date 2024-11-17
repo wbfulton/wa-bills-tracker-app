@@ -6,11 +6,11 @@ export const getLegislationDetails = async (
   billNumber: number
 ): Promise<LegislationDetail> => {
   try {
-    const data = await fetch(
+    const res = await fetch(
       `http://localhost:8080/legislation-details/${biennium}/${billNumber}`
     );
 
-    return data.json();
+    return res.json();
   } catch (error) {
     console.log(error);
 

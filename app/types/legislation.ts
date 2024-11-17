@@ -181,7 +181,7 @@ export interface Legislation {
    */
   originalAgency: Agency;
   /**
-   * Unsure. Might be if passed
+   *  The active flag is true for versions that can be passed on the floor
    */
   active: boolean;
   /**

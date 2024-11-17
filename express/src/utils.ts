@@ -7,7 +7,7 @@ export const asyncWrapper = (
     try {
       await fn(req, res, next);
     } catch (error) {
-      console.log(req, error);
+      // console.log(req, error);
       next(error); // Passes error to error handling middleware
     }
   };

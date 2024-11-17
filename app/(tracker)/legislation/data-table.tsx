@@ -4,14 +4,14 @@ import {
   ColumnDef,
   ColumnFiltersState,
   FilterFn,
-  GlobalFilterTableState,
-  PaginationState,
-  SortingState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  GlobalFilterTableState,
+  PaginationState,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 
@@ -25,78 +25,115 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 
 import { Spinner } from "@/components/icons";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/Command";
 import { InfoPopoverButton } from "@/components/ui/InfoPopoverButton";
 import { Label } from "@/components/ui/Label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/Selector";
+import { Popover, PopoverContent } from "@/components/ui/Popover";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { cn } from "@/lib/utils";
+import { PopoverTrigger } from "@radix-ui/react-popover";
 import { rankItem } from "@tanstack/match-sorter-utils";
+import { getLegislationByTopicId } from "app/api/soap/getLegislationByTopicId";
 import { useLegislationFilters } from "app/hooks/useFilters";
-import { updateLegislationFilters } from "app/store/filters-store";
-import { Biennium } from "app/types/legislation";
-import { fuzzySort } from "./utils";
+import { LegislationTopicSearch } from "express/src/types";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { fuzzySort, LegTopic, topics } from "./utils";
 
-const BienniumSelector = memo(
+// seaching by value, not by label
+const TopicIDSelect = memo(
   ({
-    disabled,
-    onChange,
+    value,
+    onValueChange,
   }: {
-    disabled?: boolean;
-    onChange?: (biennium: Biennium) => void;
+    value: LegTopic["value"];
+    onValueChange: (val: string) => void;
   }) => {
-    const filters = useLegislationFilters();
+    const [open, setOpen] = useState(false);
 
     return (
-      <Select
-        disabled={disabled}
-        value={filters.biennium}
-        onValueChange={(biennium: Biennium) => {
-          updateLegislationFilters({ biennium }).catch((err) =>
-            console.log(err)
-          );
-          onChange?.(biennium);
-        }}
-      >
-        <div className="mr-2">
+      <Popover open={open} onOpenChange={setOpen}>
+        <div className="flex flex-col">
           <Label
-            htmlFor="bienniumSelect"
+            htmlFor="topicSelect"
             className="cursor-pointer flex items-center pl-1 mb-1 text-muted-foreground"
           >
-            Biennium
+            Topic
             <InfoPopoverButton
-              title={"Biennium"}
+              title={"Topic"}
               description={
-                "Two year time period beginning on odd years. Legislation introduced during this time period can be considered in any sessions scheduled within the time period. Information is only available from 1991-current. e.g. '2023-24'"
+                "Filter legislation by topics. These topic are manually created by Washington State"
               }
               align="center"
               side="top"
             />
           </Label>
-          <SelectTrigger className="max-w-52" id="bienniumSelect">
-            <SelectValue placeholder="Select Biennium" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Biennium</SelectLabel>
-              {Object.keys(Biennium).map((val) => (
-                <SelectItem key={val} value={val}>
-                  {val}
-                </SelectItem>
-              ))}
-            </SelectGroup>
-          </SelectContent>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={open}
+              className="mr-2 min-w-max justify-between"
+            >
+              {value
+                ? topics.find((topic) => topic.value === value)?.label
+                : "Select a topic..."}
+              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
         </div>
-      </Select>
+        <PopoverContent className="w-[200px] p-0">
+          <Command
+            filter={(value: LegTopic["value"], search) => {
+              const label = topics.find(
+                (topic) => topic.value === value
+              )?.label;
+
+              if (label && label.toLowerCase().includes(search.toLowerCase()))
+                return 1;
+              return 0;
+            }}
+          >
+            <CommandInput
+              // id="topicSelect"
+              placeholder="Select Topic"
+            />
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup>
+                {topics.map((topic) => (
+                  <CommandItem
+                    key={topic.value}
+                    value={topic.value}
+                    onSelect={(currentValue) => {
+                      console.log("wbfulton", currentValue);
+                      onValueChange(currentValue === value ? "" : currentValue);
+                      setOpen(false);
+                    }}
+                  >
+                    {topic.label}
+                    <Check
+                      className={cn(
+                        "mr-2 h-4 w-4",
+                        value === topic.label ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
     );
   }
 );
@@ -133,6 +170,23 @@ export function DataTable<TData, TValue>({
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const legFilters = useLegislationFilters();
+  const [topicBillIds, setTopicBillIds] = useState<Array<string>>([]);
+  const [topicLegID, setLegId] = useState<string>();
+
+  useEffect(() => {
+    if (!legFilters.biennium || !topicLegID) return;
+
+    getLegislationByTopicId(legFilters.biennium, Number(topicLegID))
+      .then((data: LegislationTopicSearch) => {
+        const billIds: Array<string> = data.legislation.flatMap(
+          (leg) => leg.billIds
+        );
+        setTopicBillIds([data.topicTitle, ...billIds]);
+      })
+      .catch((err) => console.log(err));
+  }, [topicLegID]);
 
   const table = useReactTable({
     data,
@@ -179,14 +233,29 @@ export function DataTable<TData, TValue>({
     table.getRowCount()
   );
 
+  useMemo(() => {
+    table.setColumnFilters(() => [
+      {
+        id: "billId",
+        value: topicBillIds,
+      },
+    ]);
+  }, [topicBillIds]);
+
   return (
     <div>
       <div className="flex items-end py-4">
-        <BienniumSelector disabled={isLoading} />
+        {filters}
+        <TopicIDSelect
+          value={topicLegID ?? ""}
+          onValueChange={(topic) => {
+            setLegId(topic);
+          }}
+        />
         <Input
           disabled={isLoading}
           type="text"
-          placeholder="Search..."
+          placeholder="Search Table..."
           value={(table.getState().globalFilter as string) ?? ""}
           onChange={(event) => {
             // find way to disable bill id sort on search
@@ -200,7 +269,6 @@ export function DataTable<TData, TValue>({
             <Spinner />
           </div>
         )}
-        {filters}
       </div>
       {isLoading ? (
         <>

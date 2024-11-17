@@ -215,3 +215,28 @@ export interface CompanionLegislation {
   billId: string;
   status: string;
 }
+
+export interface RcwCiteAffectedResponse {
+  ArrayOfRcwCiteAffected: {
+    $: GeneratedType;
+    RcwCiteAffected: RcwCiteAffectedRaw[];
+  };
+}
+
+export interface RcwCiteAffectedRaw {
+  RcwCite: string[];
+  Action: string[];
+}
+
+export interface RcwCiteAffected {
+  rcwCite: string;
+  action: string;
+}
+
+export interface LegislationTopicSearch {
+  topicTitle: string;
+  legislation: Array<{
+    legislationSummary: string;
+    billIds: Array<string>;
+  }>;
+}

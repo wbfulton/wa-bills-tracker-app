@@ -29,7 +29,7 @@ export default tseslint.config(
     },
   },
   {
-    files: ["**/*.ts"],
+    files: ["**/*.ts", "**/*.tsx"],
     rules: {
       "next/core-web-vitals": "error",
       quotes: ["error", "single"],
