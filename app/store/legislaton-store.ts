@@ -1,4 +1,4 @@
-import { Legislation } from "app/types/legislation";
+import { Legislation } from "@/lib/types";
 import { BehaviorSubject } from "rxjs";
 
 export const legislationPassedLegislature$ = new BehaviorSubject<

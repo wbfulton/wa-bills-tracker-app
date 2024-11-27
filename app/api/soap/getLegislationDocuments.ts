@@ -1,5 +1,4 @@
-import { Biennium } from "app/types/legislation";
-import { LegislativeDocument } from "../types/legislationDocuments";
+import { Biennium, LegislativeDocument } from "@/lib/types";
 
 export const getLegislationDocuments = async ({
   biennium,

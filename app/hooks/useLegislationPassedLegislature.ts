@@ -1,8 +1,8 @@
 "use client";
 
+import { Legislation } from "@/lib/types";
 import { legislationPassedLegislature$ } from "app/store/legislaton-store";
-import { Legislation } from "app/types/legislation";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Returns current store of legislation passed legislature

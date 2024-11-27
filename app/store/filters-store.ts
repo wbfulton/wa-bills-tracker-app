@@ -1,4 +1,4 @@
-import { Biennium } from "app/types/legislation";
+import { Biennium } from "@/lib/types";
 import { BehaviorSubject } from "rxjs";
 
 export interface LegislationFilters {

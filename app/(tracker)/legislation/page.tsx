@@ -1,8 +1,5 @@
 "use client";
 
-import { getLegislationDetails } from "app/api/soap/getLegislationDetails";
-import { getLegislationPassedLegislature } from "app/api/soap/getLegislationPassedLegislature";
-import { useLegislationFilters } from "app/hooks/useFilters";
 import {
   Agency,
   Biennium,
@@ -11,7 +8,10 @@ import {
   LegislationCurrentStatus,
   LongLegislationType,
   ShortLegislationType,
-} from "app/types/legislation";
+} from "@/lib/types";
+import { getLegislationDetails } from "app/api/soap/getLegislationDetails";
+import { getLegislationPassedLegislature } from "app/api/soap/getLegislationPassedLegislature";
+import { useLegislationFilters } from "app/hooks/useFilters";
 import { useEffect, useState } from "react";
 import { columns } from "./columns";
 import { DataTable } from "./data-table";

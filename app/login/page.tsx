@@ -20,7 +20,6 @@ export default function LoginPage() {
         </CardHeader>
         <CardFooter>
           <form
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises
             action={async () => {
               "use server";
               // .catch((err) => console.log(err));

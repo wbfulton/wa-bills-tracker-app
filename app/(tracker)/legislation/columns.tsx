@@ -1,7 +1,6 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Legislation } from "app/types/legislation";
 
 import {
   ArrowDown,
@@ -31,7 +30,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LegislativeDocument } from "app/api/types/legislationDocuments";
+import { Legislation, LegislativeDocument } from "@/lib/types";
 import Link from "next/link";
 import { JSX } from "react";
 import { fuzzySort } from "./utils";

@@ -1,5 +1,4 @@
-import { Biennium } from "app/types/legislation";
-import { LegislationTopicSearch } from "express/src/types";
+import { Biennium, LegislationTopicSearch } from "@/lib/types";
 
 export const getLegislationByTopicId = async (
   biennium: Biennium,

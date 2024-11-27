@@ -29,10 +29,10 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Spinner } from "@/components/icons";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { LegislationTopicSearch } from "@/lib/types";
 import { rankItem } from "@tanstack/match-sorter-utils";
 import { getLegislationByTopicId } from "app/api/soap/getLegislationByTopicId";
 import { useLegislationFilters } from "app/hooks/useFilters";
-import { LegislationTopicSearch } from "express/src/types";
 import { TopicDropdownSelector } from "./filters/TopicDropdownSelector";
 import { fuzzySort } from "./utils";
 

@@ -9,9 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/Selector";
+import { Biennium } from "@/lib/types";
 import { useLegislationFilters } from "app/hooks/useFilters";
 import { updateLegislationFilters } from "app/store/filters-store";
-import { Biennium } from "app/types/legislation";
 import { memo } from "react";
 
 export const BienniumSelector = memo(

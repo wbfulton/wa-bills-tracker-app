@@ -1,5 +1,44 @@
-import { LegislativeDocument } from "app/api/types/legislationDocuments";
-import { LegislativeFiscalData } from "express/src/types";
+import { CompanionLegislation } from "./legislationDetails";
+import {
+  LegislativeDocument,
+  LegislativeFiscalDocument,
+} from "./legislationDocuments";
+
+export interface LegislationInfoRaw {
+  Biennium: string[];
+  BillId: string[];
+  BillNumber: string[];
+  SubstituteVersion: string[];
+  EngrossedVersion: string[];
+  ShortLegislationType: Array<{
+    ShortLegislationType: string[];
+    LongLegislationType: string[];
+  }>;
+  OriginalAgency: string[];
+  Active: string[];
+  DisplayNumber: string[];
+}
+
+export interface LegislationInfo {
+  biennium: string;
+  billId: string;
+  billNumber: number;
+  substituteVersion: number;
+  engrossedVersion: number;
+  shortLegislationType: string;
+  longLegislationType: string;
+  originalAgency: string;
+  active: boolean;
+  displayNumber: number;
+}
+
+export interface LegislationTopicSearch {
+  topicTitle: string;
+  legislation: Array<{
+    legislationSummary: string;
+    billIds: Array<string>;
+  }>;
+}
 
 /**
  * Prefix and bill number of a piece of legislation.  When paired with the biennium, it is a unique * reference to legislation.  This field is commonly used for display purposes on legislative reports.
@@ -116,27 +155,6 @@ export interface LegislationCurrentStatus {
   veto: boolean;
   /** True if the legislation has amendments */
   amendmentsExist: boolean;
-  /**
-   * Abbreviated description of the status of a piece of legislation in the legislative process
-   * @example "H3rd Reading", "SRules G"
-   */
-  status: BillStatus;
-}
-
-/**
- * Companion bill: A bill introduced with the same language in both the House and the Senate
- */
-export interface CompanionLegislation {
-  /**
-   * Two year time period beginning on odd years.  Legislation introduced during this time period can be considered in any sessions scheduled within the time period.  Information is only available from 1991-current.
-   * @example "1991-92"
-   */
-  biennium: Biennium;
-  /**
-   * Prefix and bill number of a piece of legislation.  When paired with the biennium, it is a unique * reference to legislation.  This field is commonly used for display purposes on legislative reports.
-   * @example "HB 1001", "2SHB 1000"
-   */
-  billId: BillId;
   /**
    * Abbreviated description of the status of a piece of legislation in the legislative process
    * @example "H3rd Reading", "SRules G"
@@ -262,5 +280,5 @@ export interface Legislation {
   /**
    * Array of relevant fiscal notes
    */
-  fiscalNotes?: Array<LegislativeFiscalData>;
+  fiscalNotes?: Array<LegislativeFiscalDocument>;
 }

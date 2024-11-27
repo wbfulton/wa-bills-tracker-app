@@ -1,3 +1,4 @@
+import axios from "axios";
 import { NextFunction, Request, Response } from "express";
 
 export const asyncWrapper = (
@@ -12,3 +13,19 @@ export const asyncWrapper = (
     }
   };
 };
+
+export const filesClient = axios.create({
+  baseURL: "https://lawfilesext.leg.wa.gov",
+});
+
+export const fiscalClient = axios.create({
+  baseURL: "https://fnspublic.ofm.wa.gov",
+});
+
+export const legislationClient = axios.create({
+  baseURL: "https://wslwebservices.leg.wa.gov",
+});
+
+export const scrapperClient = axios.create({
+  baseURL: "https://app.leg.wa.gov",
+});

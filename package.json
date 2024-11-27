@@ -6,6 +6,7 @@
     "start": "next start",
     "prepare": "husky",
     "lint": "eslint 'app/**/*.{ts,tsx}'",
+    "lint-server": "eslint 'express/**/*.{ts,tsx}'",
     "format-all": "prettier --write ."
   },
   "dependencies": {
@@ -54,7 +55,8 @@
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown",
-    "app/**/*.{ts,tsx}": "eslint"
+    "app/**/*.{ts,tsx}": "eslint",
+    "express/**/*.{ts,tsx}": "eslint"
   },
   "prettier": {
     "arrowParens": "always",
