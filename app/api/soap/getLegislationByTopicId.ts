@@ -6,7 +6,7 @@ export const getLegislationByTopicId = async (
 ): Promise<LegislationTopicSearch> => {
   try {
     const res = await fetch(
-      `http://localhost:8080/legislation/topic-search/${biennium}/${topicId}`
+      `http://localhost:8080/legislation/${biennium}/topic-search/${topicId}`
     );
 
     return res.json();

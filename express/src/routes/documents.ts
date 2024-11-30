@@ -23,7 +23,6 @@ import {
  * @GET /text/:biennium/:originalAgency/:legType/:billNumber
  * @GET /rcw
  * @GET /fiscal-note/:packageID
- * @GET /:biennium/topic-search/:topicId
  * @POST /fiscal-notes { sessionYear, billNumber, billTitle, requestType }
  * @POST /documents
  */
@@ -60,6 +59,8 @@ documentsRouter.get(
 /**
  * RCW (revised code of washington)
  * XML and Docx option, but less data
+ *
+ * TODO
  */
 documentsRouter.get(
   "/rcw",

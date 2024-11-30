@@ -102,7 +102,6 @@ legislationRouter.get(
     };
 
     const query = queryString.stringify(data);
-    console.log(query);
 
     const response = await scrapperClient.post(
       "bi/report/_topicalIndex/",

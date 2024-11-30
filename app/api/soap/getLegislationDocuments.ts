@@ -8,7 +8,7 @@ export const getLegislationDocuments = async ({
   text: string;
 }): Promise<Array<LegislativeDocument>> => {
   try {
-    const res = await fetch(`http://localhost:8080/legislation/documents`, {
+    const res = await fetch(`http://localhost:8080/documents`, {
       method: "POST",
       headers: {
         Accept: "application/json",

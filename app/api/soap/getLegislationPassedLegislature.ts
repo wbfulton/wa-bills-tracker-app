@@ -5,7 +5,7 @@ export const getLegislationPassedLegislature = async (
 ): Promise<Array<LegislationInfo>> => {
   try {
     const data = await fetch(
-      `http://localhost:8080/passed-legislature/${biennium}`
+      `http://localhost:8080/legislation/${biennium}/passed-legislature`
     );
 
     return data.json();
