@@ -8,11 +8,13 @@ import {
 } from "@/components/ui/Accordion";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/Separator";
+import { cn } from "@/lib/utils";
 import {
   Landmark,
   LucideCheck,
@@ -29,6 +31,7 @@ import {
   Vote,
 } from "lucide-react";
 import { Suspense } from "react";
+import styles from "./page.module.scss";
 
 const HowLegislationWorksPage = () => {
   return (
@@ -36,22 +39,112 @@ const HowLegislationWorksPage = () => {
       <div className="max-w-full py-10 lg:px-10 sm:px-6 px-4 ">
         <div className="container flex items-center justify-between space-y-2">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight mb-2">
-              How does the Washington State Legislature work?
-            </h1>
-            <div className="flex items-start justify-start gap-4 flex-wrap py-4">
-              <Card className="w-full p-2 order-0">
+            <article className="mb-8">
+              <h1 className="text-2xl font-bold tracking-tight mb-4">
+                How does the Washington State Legislature work?
+              </h1>
+              <p className="tracking-tight mb-2">
+                The state legislature creates and passes laws. This organization
+                has direct impact on the lives of Washingtonians, much more than
+                federal congress.
+              </p>
+            </article>
+            <div className={cn(styles.structureGrid, "py-4 gap-4 h-max")}>
+              <Card className="w-full h-full">
+                <CardHeader>
+                  <CardTitle className="text-xl flex justify-start items-center h-10">
+                    <Users className="h-10 w-10 mr-4" />
+                    Senate
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>
+                    The Senate is one of the two houses (or chambers), and it
+                    holds 49 people. There is one Senator for each of the 49
+                    legislative districts. A Senator serves a four-year term
+                    with no limit on number of terms served.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+              <Card className="w-full h-full">
+                <CardHeader>
+                  <CardTitle className="text-xl flex justify-start items-center h-10">
+                    <Users className="h-10 w-10 mr-4" />
+                    House of Representatives
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>
+                    The House of Representatives is one of the two houses (or
+                    chambers), and it holds 98 people. There are two
+                    Representatives for each of the 49 legislative districts. A
+                    Representative serves a two-year term with no limit on
+                    number of terms served.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+              <Card className="w-full h-full">
+                <CardHeader>
+                  <CardTitle className="text-xl flex justify-start items-center h-10">
+                    <Users className="h-10 w-10 mr-4" />
+                    Committees
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>
+                    Committees are made up of Senators and Representatives to
+                    review and hear testimonies on proposed legislation.
+                    Committee meetings are open to the public. There are over
+                    60+ committees ranging from Water Supply to Eduaction.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+              <Card className="w-full h-full">
+                <CardHeader>
+                  <CardTitle className="text-xl flex justify-start items-center h-10">
+                    <Users className="h-10 w-10 mr-4" />
+                    Governors Office
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="mb-2">
+                    The Washington State Governor holds special power in the
+                    government. Elected to four-year terms (without term
+                    limits), the Governor can sign, veto, or partially veto
+                    legislation.
+                  </CardDescription>
+                  <CardDescription>
+                    This office can also create Executive Orders to cabinet
+                    agencies. They requires certain actions be taken and may
+                    have the force and effect of law.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+              <Card className="w-full h-full">
+                <CardHeader>
+                  <CardTitle className="text-xl flex justify-start items-center h-10">
+                    <Users className="h-10 w-10 mr-4" />
+                    Legislative Agencies
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>
+                    Legislative agencies are special organizations that support
+                    the Legislature. This can range from IT to the Ethics Board.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            </div>
+            <h3 className="text-xl font-bold tracking-tight my-4">
+              How does the State Legislature function?
+            </h3>
+            <div className={cn(styles.structureGrid, "py-4 gap-4 h-max")}>
+              <Card className="w-full h-full">
                 <CardHeader>
                   <CardTitle className="text-xl flex justify-start items-center">
-                    <Users className="h-10 w-10 mr-5" />
-                    Representation
+                    <Users className="h-10 w-10 mr-4" />
+                    Elections
                   </CardTitle>
-                  <CardDescription className="mb-2 mt-4">
-                    The Washington State Legislature is made up of two houses
-                    (or chambers), the Senate and the House of Representatives.
-                    Washington has 49 legislative districts, each of which
-                    elects a Senator and two Representatives.
-                  </CardDescription>
                   <CardDescription className="my-2">
                     Senators serve four-year terms and Representatives serve
                     two-year terms. The Senate and House of Representatives meet
@@ -60,16 +153,19 @@ const HowLegislationWorksPage = () => {
                   </CardDescription>
                 </CardHeader>
               </Card>
-              <Card className="w-full p-2 order-1">
+              <Card className="w-full h-full">
                 <CardHeader>
                   <CardTitle className="text-xl flex justify-start items-center">
-                    <RefreshCcw className="h-10 w-10 mr-5" />
-                    Legislative Sessions & Cycles
+                    <RefreshCcw className="h-10 w-10 mr-4" />
+                    Legislative Cycles
                   </CardTitle>
                   <CardDescription className="mb-2 mt-4">
                     The legislative cycle is two years long. Within that
                     two-year cycle, there are two kinds of legislative sessions:
                     regular sessions and extraordinary, or special, sessions.
+                    The Senate and House of Representatives meet in session each
+                    year to create new laws, change existing laws, and enact
+                    budgets for the State.
                   </CardDescription>
                   <CardDescription className="my-2">
                     Regular sessions are mandated by the State Constitution and
@@ -86,11 +182,11 @@ const HowLegislationWorksPage = () => {
                   </CardDescription>
                 </CardHeader>
               </Card>
-              <Card className="w-full p-2 order-2">
+              <Card className="w-full h-full">
                 <CardHeader>
                   <CardTitle className="text-xl flex justify-start items-center">
-                    <Landmark className="h-10 w-10 mr-5" />
-                    Creation and Passage of Laws
+                    <Landmark className="h-10 w-10 mr-4" />
+                    <span>Creation and Passage of Laws</span>
                   </CardTitle>
                   <CardDescription className="mb-2 mt-4">
                     Once a member introduces a bill, the legislative process

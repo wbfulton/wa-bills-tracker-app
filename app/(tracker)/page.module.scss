@@ -1,0 +1,7 @@
+.structureGrid {
+  display: grid;
+  grid-template-rows: fit-content;
+  grid-auto-rows: fit-content;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  gap: 10px;
+}
