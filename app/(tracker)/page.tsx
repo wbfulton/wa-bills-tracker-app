@@ -87,22 +87,6 @@ const HowLegislationWorksPage = () => {
                 <CardHeader>
                   <CardTitle className="text-xl flex justify-start items-center h-10">
                     <Users className="h-10 w-10 mr-4" />
-                    Committees
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>
-                    Committees are made up of Senators and Representatives to
-                    review and hear testimonies on proposed legislation.
-                    Committee meetings are open to the public. There are over
-                    60+ committees ranging from Water Supply to Eduaction.
-                  </CardDescription>
-                </CardContent>
-              </Card>
-              <Card className="w-full h-full">
-                <CardHeader>
-                  <CardTitle className="text-xl flex justify-start items-center h-10">
-                    <Users className="h-10 w-10 mr-4" />
                     Governors Office
                   </CardTitle>
                 </CardHeader>
@@ -120,6 +104,23 @@ const HowLegislationWorksPage = () => {
                   </CardDescription>
                 </CardContent>
               </Card>
+              <Card className="w-full h-full">
+                <CardHeader>
+                  <CardTitle className="text-xl flex justify-start items-center h-10">
+                    <Users className="h-10 w-10 mr-4" />
+                    Committees
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription>
+                    Committees are made up of Senators and Representatives to
+                    review and hear testimonies on proposed legislation.
+                    Committee meetings are open to the public. There are over
+                    60+ committees ranging from Water Supply to Eduaction.
+                  </CardDescription>
+                </CardContent>
+              </Card>
+
               <Card className="w-full h-full">
                 <CardHeader>
                   <CardTitle className="text-xl flex justify-start items-center h-10">
@@ -146,39 +147,9 @@ const HowLegislationWorksPage = () => {
                     Elections
                   </CardTitle>
                   <CardDescription className="my-2">
-                    Senators serve four-year terms and Representatives serve
-                    two-year terms. The Senate and House of Representatives meet
-                    in session each year to create new laws, change existing
-                    laws, and enact budgets for the State.
-                  </CardDescription>
-                </CardHeader>
-              </Card>
-              <Card className="w-full h-full">
-                <CardHeader>
-                  <CardTitle className="text-xl flex justify-start items-center">
-                    <RefreshCcw className="h-10 w-10 mr-4" />
-                    Legislative Cycles
-                  </CardTitle>
-                  <CardDescription className="mb-2 mt-4">
-                    The legislative cycle is two years long. Within that
-                    two-year cycle, there are two kinds of legislative sessions:
-                    regular sessions and extraordinary, or special, sessions.
-                    The Senate and House of Representatives meet in session each
-                    year to create new laws, change existing laws, and enact
-                    budgets for the State.
-                  </CardDescription>
-                  <CardDescription className="my-2">
-                    Regular sessions are mandated by the State Constitution and
-                    begin the second Monday in January each year. In the
-                    odd-numbered year, for example, 2005, the regular session is
-                    105 days; in the even-numbered year, for example, 2006, it
-                    is 60 days.
-                  </CardDescription>
-                  <CardDescription className="my-2">
-                    Extraordinary sessions are called by the Governor to address
-                    specific issues, usually the budget. There can be any number
-                    of extraordinary sessions within the two-year cycle, and
-                    they can last no more than 30 days.
+                    Every four years, elections are held for Senators and the
+                    Governor. Every two years, elections are held for
+                    Representatives.
                   </CardDescription>
                 </CardHeader>
               </Card>
@@ -199,6 +170,34 @@ const HowLegislationWorksPage = () => {
                   </CardDescription>
                 </CardHeader>
               </Card>
+              <Card className="w-full h-full">
+                <CardHeader>
+                  <CardTitle className="text-xl flex justify-start items-center">
+                    <RefreshCcw className="h-10 w-10 mr-4" />
+                    Legislative Cycles
+                  </CardTitle>
+                  <CardDescription className="mb-2 mt-4">
+                    The legislative cycle is two years long, and is comprised of
+                    sessions. There are two kinds of sessions: regular and
+                    extraordinary, or special, sessions. The Senate and House of
+                    Representatives meet in session each year to create new
+                    laws, change existing laws, and enact budgets for the State.
+                  </CardDescription>
+                  <CardDescription className="my-2">
+                    Regular sessions are mandated by the State Constitution and
+                    begin the second Monday in January each year. In the
+                    odd-numbered year, for example, 2005, the regular session is
+                    105 days; in the even-numbered year, for example, 2006, it
+                    is 60 days.
+                  </CardDescription>
+                  <CardDescription className="my-2">
+                    Extraordinary sessions are called by the Governor to address
+                    specific issues, usually the budget. There can be any number
+                    of extraordinary sessions within the two-year cycle, and
+                    they can last no more than 30 days.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
             </div>
           </div>
         </div>
@@ -207,7 +206,7 @@ const HowLegislationWorksPage = () => {
         <div className="container flex items-center justify-between space-y-2 w-full">
           <div>
             <h2 className="text-2xl font-bold tracking-tight mb-2">
-              Overview of the Legislative Process
+              How are laws created?
             </h2>
 
             <ol className="list-decimal list-inside">
